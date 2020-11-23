@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
+from slackeventsapi import SlackEventAdapter
 import os
 
 app = Flask(__name__)
@@ -21,6 +22,18 @@ def testdb():
     except Exception as e:
         print(e)
         return '<h1>Something is broken.</h1>'
+
+# Set up listener for slack stuff
+SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
+# Bind the Events API route to your existing Flask app by passing the server
+# instance as the last param, or with `server=app`.
+slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
+
+# Create an event listener for "reaction_added" events and print the emoji name
+@slack_events_adapter.on("reaction_added")
+def reaction_added(event_data):
+  emoji = event_data["event"]["reaction"]
+  print(emoji)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))

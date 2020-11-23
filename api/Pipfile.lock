@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d5fd2457aab854f5fcdf50254e8504dc9dbc4396347a8c19811e5f2eb1852404"
+            "sha256": "063aa3a3b0f17976b6572c34292b563f384994b2ebd5ba891166b3088a6bb29d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -104,6 +104,21 @@
             ],
             "index": "pypi",
             "version": "==2.0.1"
+        },
+        "pyee": {
+            "hashes": [
+                "sha256:0667fd696f55ffdf9f2646fa60557b4eeae1a427315d3938b614ee40755d18b6",
+                "sha256:15c6bcc14de2c2b3d8ee8923283fca182bcfab4155975a5165c66fc4bf44b680"
+            ],
+            "version": "==7.0.4"
+        },
+        "slackeventsapi": {
+            "hashes": [
+                "sha256:1582964860b9e00b721ddfc7402defdd02bdf73f48d4cee7fb952a3b27db45fb",
+                "sha256:6baa2bf12b5a9d312bf02836720f3ea3b730377449d67ea92ec63fc7c02c7c30"
+            ],
+            "index": "pypi",
+            "version": "==2.2.1"
         },
         "sqlalchemy": {
             "hashes": [
