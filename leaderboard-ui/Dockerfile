@@ -1,17 +1,22 @@
-FROM node:14.1.0
+FROM node:14.1.0 AS compile-image
 
 # Set working directory
-WORKDIR /app
-# Add node modules to path
-ENV PATH /app/node_modules/.bin:$PATH
+WORKDIR /opt/ng
 
 # Copy package.json and download dependencies
-COPY package.json /app/package.json
+COPY package.json package-lock.json ./
 RUN npm install
-RUN npm install -g @angular/cli@7.3.10
+
+# Add node modules to path
+ENV PATH="./node_modules/.bin:$PATH" 
 
 # Add app
-COPY . /app
+COPY . ./
 
-# Start app
-CMD ng serve --host 0.0.0.0
+# Build prod version
+RUN ng build --prod
+
+# Use nginx
+FROM nginx
+COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=compile-image /opt/ng/dist/leaderboard-ui /usr/share/nginx/html
