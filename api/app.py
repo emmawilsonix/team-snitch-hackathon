@@ -40,6 +40,7 @@ def handle_message(event_data):
     if message.get("subtype") is None and "hi" in message.get('text'):
         channel = message["channel"]
         message = "Hello <@%s>! :tada:" % message["user"]
+        print("HELLO")
         slack_client.api_call("chat.postMessage", channel=channel, text=message)
 
 if __name__ == '__main__':
