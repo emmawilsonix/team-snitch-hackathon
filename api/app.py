@@ -1,12 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
+from routes.users import users_routes
 import os
 
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DBHOST", "mysql://root:lolviper@localhost/Hogwarts")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+app.register_blueprint(users_routes)
 db = SQLAlchemy(app)
 
 @app.route("/")
@@ -15,6 +17,7 @@ def home():
 
 @app.route('/test')
 def testdb():
+    # lmao get rekt
     try:
         db.session.query("1").from_statement(text("SELECT 1")).all()
         return '<h1>It works.</h1>'
