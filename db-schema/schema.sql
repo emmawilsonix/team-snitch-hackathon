@@ -23,7 +23,6 @@ CREATE TABLE `points` (
   `userID` mediumint(8) unsigned NOT NULL,
   `sourceUserID` mediumint(8) unsigned NOT NULL,
   `points` mediumint(8) unsigned NOT NULL,
-  `emailAddress` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`userID`, `sourceUserID`, `date`),
   CONSTRAINT `user_exists` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`),
   CONSTRAINT `source_user_exists` FOREIGN KEY (`sourceUserID`) REFERENCES `users` (`userID`)
