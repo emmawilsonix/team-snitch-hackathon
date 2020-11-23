@@ -16,7 +16,6 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 RUN pip3 install pipenv
 RUN pipenv install --system --deploy
-RUN pip install gunicorn
 
 COPY . /src/api
 
