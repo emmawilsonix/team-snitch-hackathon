@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from slackeventsapi import SlackEventAdapter
+from slackclient import SlackClient
 import os
 
 app = Flask(__name__)
@@ -23,17 +24,23 @@ def testdb():
         print(e)
         return '<h1>Something is broken.</h1>'
 
-# Set up listener for slack stuff
+# Bind the Events API route to your existing Flask app
 SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
-# Bind the Events API route to your existing Flask app by passing the server
-# instance as the last param, or with `server=app`.
 slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
 
+# Create a SlackClient for your bot to use for Web API requests
+slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
+slack_client = SlackClient(slack_bot_token)
+
 # Create an event listener for "reaction_added" events and print the emoji name
-@slack_events_adapter.on("reaction_added")
-def reaction_added(event_data):
-  emoji = event_data["event"]["reaction"]
-  print(emoji)
+@slack_events_adapter.on("message")
+def handle_message(event_data):
+    message = event_data["event"]
+    # If the incoming message contains "hi", then respond with a "Hello" message
+    if message.get("subtype") is None and "hi" in message.get('text'):
+        channel = message["channel"]
+        message = "Hello <@%s>! :tada:" % message["user"]
+        slack_client.api_call("chat.postMessage", channel=channel, text=message)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
