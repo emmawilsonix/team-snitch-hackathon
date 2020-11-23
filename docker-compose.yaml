@@ -5,14 +5,17 @@ services:
     restart: always
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: 'viper67'
+      MYSQL_ROOT_PASSWORD: 'lolviper'
       MYSQL_USER: 'hogbot'
-      MYSQL_PASS: 'viper67'
+      MYSQL_PASS: 'lolviper'
+    command: --init-file /data/application/schema.sql
     volumes:
       - datavolume:/var/lib/mysql
+      - schema.sql:/data/application/schema.sql
     ports: 
       - 3306:3306
   api:
+    container_name: api
     build: ./api
     ports:
       - "5000:5000"
@@ -24,3 +27,4 @@ services:
       - mysql
 volumes:
     datavolume:
+    schema.sql:
