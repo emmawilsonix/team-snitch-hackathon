@@ -1,0 +1,30 @@
+version: '2'
+services:
+  mysql:
+    container_name: database
+    restart: always
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 'lolviper'
+      MYSQL_USER: 'hogbot'
+      MYSQL_PASS: 'lolviper'
+    command: --init-file /data/application/schema.sql
+    volumes:
+      - datavolume:/var/lib/mysql
+      - schema.sql:/data/application/schema.sql
+    ports: 
+      - 3306:3306
+  api:
+    container_name: api
+    build: ./api
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/api
+    environment:
+      FLASK_ENV: development
+    depends_on:
+      - mysql
+volumes:
+    datavolume:
+    schema.sql:
