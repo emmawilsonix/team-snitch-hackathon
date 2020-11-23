@@ -32,7 +32,7 @@ slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", 
 slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
 slack_client = SlackClient(slack_bot_token)
 
-# Create an event listener for "reaction_added" events and print the emoji name
+
 @slack_events_adapter.on("message")
 def handle_message(event_data):
     message = event_data["event"]
