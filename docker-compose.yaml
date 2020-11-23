@@ -1,0 +1,26 @@
+version: '2'
+services:
+  mysql:
+    container_name: database
+    restart: always
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 'viper67'
+      MYSQL_USER: 'hogbot'
+      MYSQL_PASS: 'viper67'
+    volumes:
+      - datavolume:/var/lib/mysql
+    ports: 
+      - 3306:3306
+  web:
+    build: ./api
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/api
+    environment:
+      FLASK_ENV: development
+    depends_on:
+      - mysql
+volumes:
+    datavolume:

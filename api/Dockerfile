@@ -8,7 +8,7 @@ RUN apk add build-base gcc abuild binutils binutils-doc gcc-doc
 RUN apk add python3-dev
 RUN apk add mariadb-dev
 COPY . /src
-EXPOSE 8000
+EXPOSE 5000
 
 
 # Python setup
