@@ -25,6 +25,11 @@ services:
       FLASK_ENV: development
     depends_on:
       - mysql
+  leaderboard-ui:
+    container_name: leaderboard-ui
+    build: ./leaderboard-ui
+    ports:
+      - 80:80
 volumes:
     datavolume:
     schema.sql:
