@@ -6,4 +6,4 @@ A Hogwarts House Cup App for Slack
 - `cd api && pip install pipenv`
 - `pipenv install`
 - `pipenv shell`
-- `env FLASK_APP=app.py flask run`
+- `python3 app.py`
