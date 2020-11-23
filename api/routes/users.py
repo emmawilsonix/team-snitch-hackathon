@@ -1,7 +1,5 @@
 from flask import Blueprint, request
 
-valid_query_params = ['teamID', 'orderby']
-
 users_routes = Blueprint('users_routes', __name__)
 @users_routes.route('/users', methods=['GET', 'POST'])
 def users_list():
@@ -11,7 +9,7 @@ def users_list():
                 request.args.get('teamID') is None and 
                 request.args.get('orderby') is None
             ):
-                return "Bad request param", 400
+                return "Bad request param breh", 400
             if request.args.get('teamID'):
                 # do team ID select
                 pass
