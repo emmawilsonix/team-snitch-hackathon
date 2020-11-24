@@ -55,11 +55,16 @@ class Users(db.Model):
         return {"userID": self.userID,
                 "teamID": self.teamID,
                 "emailAddress": self.emailAddress,
-                "img": my_image_url}
+                "img": image_url}
 
 class Teams(db.Model):
     teamID = db.Column(db.Integer, primary_key=True)
-    emailAddress = db.Column(db.String(255))
+    name = db.Column(db.String(255))
+    def serialize(self):
+        return {
+                "teamID": self.teamID,
+                "name": self.name
+            }
 
 
 class Points(db.Model):
@@ -94,7 +99,6 @@ def users_list():
                 points = Points.query.filter_by(userID=user.get("userID")).all()
                 total_points = 0
                 for p in points:
-                    print(p)
                     total_points += p.serialize().get('points')
                 user['points'] = total_points
             return jsonify(response)
@@ -108,6 +112,20 @@ def users_list():
     else:
         return "Bad request method breh", 405
 
+@app.route('/teams', methods=['GET'])
+def teams_list():
+    if request.method == 'GET':
+        teams = [team.serialize() for team in Teams.query.all()]
+        for t in teams:
+            users = Users.query.filter_by(teamID=t['teamID'])
+            team_points = 0
+            for user in users:
+                points = Points.query.filter_by(userID=user.serialize().get("userID")).all()
+                for p in points:
+                    team_points += p.serialize().get('points')
+            t['team_points'] = team_points
+        
+        return jsonify(teams)
 
 @app.route('/test/users', methods=['GET'])
 def testusersget():
