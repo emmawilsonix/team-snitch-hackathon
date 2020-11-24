@@ -169,12 +169,14 @@ def try_add_user(user_email):
     query="""INSERT INTO users (teamID, emailAddress) VALUES (%s, %s)"""
     print(query)
     team_assign=random.choice(TEAM_IDS)
-    cur = mysql.connection.cursor()
-    cur.execute(query, (team_assign, user_email))
-    mysql.connection.commit()
-    cur.close()
-
-    return TEAM_NAME[team_assign]
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute(query, (team_assign, user_email))
+        mysql.connection.commit()
+        cur.close()
+        return TEAM_NAME[team_assign]
+    except:
+        return None
 
 
 if __name__ == '__main__':
