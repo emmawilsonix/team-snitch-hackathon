@@ -36,7 +36,7 @@ SLACKBOT_USERID="U01F944MG3X"
 
 # Create an event listener for @bot mentions
 @slack_events_adapter.on("app_mention")
-def handle_message(event_data):
+def handle_app_mention(event_data):
     message = event_data["event"]
     print(message)
 
@@ -46,6 +46,7 @@ def handle_message(event_data):
     # Iterate through message body looking for the destination user. Use the first match.
     elements = message["blocks"][0]["elements"][0]["elements"]
     mentioned_user = None
+    message = ""
     for element in elements:
         if element["type"] == "user" and element["user_id"] != SLACKBOT_USERID:
             mentioned_user = slack_client.users_info(user=element["user_id"])
@@ -53,14 +54,22 @@ def handle_message(event_data):
     if mentioned_user is not None:
         source_user_email = source_user["user"]["profile"]["email"]
         mentioned_user_email = mentioned_user["user"]["profile"]["email"]
-        try_grant_points(source_user_email, mentioned_user_email)
-        print(source_user_email + " granted a point to " + mentioned_user_email)
+        if try_grant_points(source_user_email, mentioned_user_email):
+            print(source_user_email + " granted a point to " + mentioned_user_email + "...")
+            message = "Hey <@" + mentioned_user["user"]["id"] + "> you got a point from <@" + source_user["user"]["id"] + ">!"
+        else:
+            print(source_user_email + " failed to give a point to " + mentioned_user_email + "...")
+            message = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> a point... can you try again?"
     else:
+        message = "Hey <@" + source_user["user"]["id"] + "> something funny just happened... can you try again?"
         print("Unable to grant points...")
+
+    channel = message["channel"]
+    slack_client.chat_postMessage(channel=channel, text=message)
 
 
 def try_grant_points(source_user_email, mentioned_user_email):
-    return True
+    return False
 
 
 
