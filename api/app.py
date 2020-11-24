@@ -69,7 +69,7 @@ def handle_app_mention(event_data):
             # Try to grant points
             error = try_grant_points(source_user_email, mentioned_user_email, points)
             if error is None:
-                msg = "Hey <@" + mentioned_user["user"]["id"] + "> you got " + string(points) + " points from <@" + source_user["user"]["id"] + ">!"
+                msg = "Hey <@" + mentioned_user["user"]["id"] + "> you got " + str(points) + " points from <@" + source_user["user"]["id"] + ">!"
                 notify_user = mentioned_user["user"]["id"]
             # If we couldn't grant points, let people know
             else:
