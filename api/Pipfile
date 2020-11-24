@@ -12,6 +12,7 @@ mysqlclient = "==2.0.1"
 slackeventsapi = "*"
 slackclient = "==2.9.3"
 slack-sdk = "*"
+flask-mysqldb = "*"
 
 [requires]
 python_version = "3.8"
