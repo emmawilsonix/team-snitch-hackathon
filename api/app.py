@@ -113,7 +113,7 @@ def handle_user_joined_channel(event_data):
     # Get user info and add them to the DB.
     joined=message["user"]
     joined_user = slack_client.users_info(user=joined)
-    joined_user_email = source_user["user"]["profile"]["email"]
+    joined_user_email = joined_user["user"]["profile"]["email"]
     team = try_add_user(joined_user_email)
     if team is None:
         msg = """Hey <@{joined}> :wave: I'm <@{snitch}>! Looks like you joined #general but something went wrong so I wasn't able to assign you a team. 
