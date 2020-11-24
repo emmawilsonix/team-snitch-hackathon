@@ -10,6 +10,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IndividualPanelComponent } from './individual-panel/individual-panel.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TeamLeaderboardComponent,
     IndividualLeaderboardComponent,
     TeamPanelComponent,
-    LandingPageComponent
+    LandingPageComponent,
+    IndividualPanelComponent
   ],
   imports: [
     BrowserModule,

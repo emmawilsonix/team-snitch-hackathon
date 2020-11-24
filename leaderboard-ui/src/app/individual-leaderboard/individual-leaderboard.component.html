@@ -1,1 +1,4 @@
-<p>individual-leaderboard works!</p>
+<h2 class="individualLeaderboard">Individual Leaderboard</h2>
+<ul *ngFor="let individual of listOfIndividuals; index as i;">
+    <app-individual-panel [individual]="individual" [placement]="i+1"></app-individual-panel>
+    </ul>
