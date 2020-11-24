@@ -1,11 +1,41 @@
-from flask import Flask
+import random
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
+from routes.users import users_routes
+from routes.home import home_routes
+from mocks import mock_user_list, mock_teams_list, mock_team_with_users
 import os
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return "Welcome to Hogwarts 🧙"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DBHOST", "mysql://root:lolviper@localhost/Hogwarts")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+app.register_blueprint(users_routes)
+app.register_blueprint(home_routes)
+db = SQLAlchemy(app)
+
+@app.route('/test/users', methods=['GET'])
+def testusersget():
+    if request.args.get('teamID'):
+        arg = request.args.get('teamID')
+        if arg:
+            users = []
+            for d in mock_user_list:
+                if int(d['teamID']) == int(arg):
+                    users.append(d)
+            return jsonify(users)
+    return jsonify(mock_user_list)
+
+@app.route('/test/teams', methods=['GET'])
+def testteamsget():
+    return jsonify(mock_teams_list)
+
+@app.route('/test/teams/<id>', methods=['GET'])
+def testteamsgetbyid(id):
+    for d in mock_team_with_users:
+        if int(d['teamID']) == int(request.view_args['id']):
+            return jsonify(d)
 
 
 if __name__ == '__main__':
