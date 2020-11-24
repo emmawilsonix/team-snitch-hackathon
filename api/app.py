@@ -2,8 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from slackeventsapi import SlackEventAdapter
-from slackclient import SlackClient
+import slack
 import os
+from slack import WebClient
 
 app = Flask(__name__)
 
@@ -30,12 +31,14 @@ slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", 
 
 # Create a SlackClient for your bot to use for Web API requests
 slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
-slack_client = SlackClient(slack_bot_token)
+slack_client = WebClient(token=slack_bot_token)
 
-
-@slack_events_adapter.on("message")
+# Create an event listener for @bot mentions
+@slack_events_adapter.on("app_mention")
 def handle_message(event_data):
     message = event_data["event"]
+    print(message)
+
     # If the incoming message contains "hi", then respond with a "Hello" message
     if message.get("subtype") is None and "hi" in message.get('text'):
         channel = message["channel"]
