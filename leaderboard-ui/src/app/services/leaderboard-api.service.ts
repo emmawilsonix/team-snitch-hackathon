@@ -2,15 +2,16 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { Observable, throwError} from 'rxjs';
 import {API_URL} from '../env';
-import {ITeam} from './team.model';
+import {IUser, ITeam} from '../models/models';
 import { catchError } from 'rxjs/operators';
 
 @Injectable()
-export class TeamsApiService {
+export class LeaderboardApiService {
 
   constructor(private http: HttpClient) {
   }
 
+  /** Function to handle any API errors */
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
@@ -27,10 +28,19 @@ export class TeamsApiService {
       'Something bad happened; please try again later.');
   }
 
-  // GET list of public, future events
+  /** GET all test teams */
   public getAllTestTeams(): Observable<ITeam[]> {
     return this.http
       .get<ITeam[]>(`${API_URL}/test/teams`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /** GET all test users */
+  public getAllTestUsers(): Observable<IUser[]> {
+    return this.http
+      .get<IUser[]>(`${API_URL}/test/users`)
       .pipe(
         catchError(this.handleError)
       );

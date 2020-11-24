@@ -3,49 +3,49 @@ mock_user_list = [
     {
         "userID": 1,
         "teamID": 1,
-        "emailAddress": "hackathon@tumblr.com",
+        "emailAddress": "hackathon.lastname@tumblr.com",
         "points": 123
     },
     {
         "userID": 2,
         "teamID": 2,
-        "emailAddress": "something@nowhere.com",
+        "emailAddress": "something.weird@nowhere.com",
         "points": 456
     },
     {
         "userID": 3,
         "teamID": 1,
-        "emailAddress": "2020@didnthappen.com",
+        "emailAddress": "2020.didnthappen@didnthappen.com",
         "points": 789
     },
     {
         "userID": 4,
         "teamID": 1,
-        "emailAddress": "josh@josh.net",
+        "emailAddress": "josh.thebest@josh.net",
         "points": 111
     },
     {
         "userID": 5,
         "teamID": 3,
-        "emailAddress": "michaelangelo@ninjaturtles.ca",
+        "emailAddress": "michaelangelo.ninja@ninjaturtles.ca",
         "points": 1337
     },
     {
         "userID": 6,
         "teamID": 2,
-        "emailAddress": "jeffbezos@match.com",
+        "emailAddress": "jeff.bezos@match.com",
         "points": 1010101010101
     },
     {
         "userID": 7,
         "teamID": 1,
-        "emailAddress": "aryastark@kingslanding.io",
+        "emailAddress": "arya.stark@kingslanding.io",
         "points": 2323
     },
     {
         "userID": 8,
         "teamID": 4,
-        "emailAddress": "jonsnow@thewalltbh.com",
+        "emailAddress": "jon.snow@thewalltbh.com",
         "points": 34
     }
 ]
