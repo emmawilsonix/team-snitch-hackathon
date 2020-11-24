@@ -10,19 +10,6 @@
     letter-spacing: 0.88px;
 }
 
-ul {
-    margin: 0 72px 0 72px;
-    padding: 0;
-}
-
-.individual-container {
-    padding-top: 24px;
-    padding-bottom: 24px;
-}
-
-//////////////
-
-
 ::ng-deep .mat-list-base {
     padding: 0 72px 0 72px;
 }
@@ -40,8 +27,4 @@ ul {
 
 .points {
     float: right;
-}
-
-.placement {
-    float:left;
 }
