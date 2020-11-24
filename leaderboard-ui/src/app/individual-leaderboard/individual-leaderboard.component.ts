@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-individual-leaderboard',
   templateUrl: './individual-leaderboard.component.html',
   styleUrls: ['./individual-leaderboard.component.scss']
 })
-export class IndividualLeaderboardComponent implements OnInit {
+export class IndividualLeaderboardComponent implements OnChanges {
 
   public listOfIndividuals = [{
     name: 'Kim Smith',
@@ -19,7 +19,7 @@ export class IndividualLeaderboardComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
   }
 
 }

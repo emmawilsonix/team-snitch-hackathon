@@ -30,7 +30,7 @@ export class TeamLeaderboardComponent implements OnInit {
   },
   {
     teamID: 4,
-    name: "Dancing Orange",
+    name: "Yay Orange",
     points: 2289,
     colour: "rgb(64, 150, 70)",
     img: "assets/images/orange.png"
