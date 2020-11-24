@@ -43,7 +43,7 @@ def handle_app_mention(event_data):
     source_user = slack_client.users_info(user=message["user"])
 
     # Default variable values
-    slack_message, msg, mentioned_user = "", "", None
+    slack_message, msg, mentioned_user, attachments = "", "", None, None
     notify_user = source_user["user"]["id"]
     
     # Iterate through message body looking for the destination user. Use the first match.
@@ -68,7 +68,12 @@ def handle_app_mention(event_data):
             # Try to grant points
             error = try_grant_points(source_user_email, mentioned_user_email, points)
             if error is None:
-                msg = "Hey <@" + mentioned_user["user"]["id"] + "> you got " + str(points) + " points from <@" + source_user["user"]["id"] + ">!"
+                original_message = slack_client.chat_getPermalink(channel=message["channel"], message_ts=message["ts"])
+                msg = """Hey <@{mentioned}> :wave: <{permalink}|you got {points} points> from <@{source}>!
+
+⚡ Check out the leaderboard <https://snitch-leaderboard.herokuapp.com/|here>! ⚡
+
+⚡ And get to snitching! ⚡""".format(mentioned=mentioned_user["user"]["id"], points=str(points), source=source_user["user"]["id"], permalink=original_message["permalink"])
                 notify_user = mentioned_user["user"]["id"]
             # If we couldn't grant points, let people know
             else:
