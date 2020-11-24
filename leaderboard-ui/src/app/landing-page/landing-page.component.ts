@@ -14,12 +14,12 @@ export class LandingPageComponent implements OnInit {
   constructor(private teamsApi: TeamsApiService) {}
 
   ngOnInit(): void {
-    this.getTeams();
+    this.getTestTeams();
   }
 
-  public getTeams(): void {
+  public getTestTeams(): void {
     this.teamsApi
-      .getAllTeams()
+      .getAllTestTeams()
       .subscribe(response => {
         this.teamsList = response;
       },

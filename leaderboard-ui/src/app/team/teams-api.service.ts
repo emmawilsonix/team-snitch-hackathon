@@ -28,7 +28,7 @@ export class TeamsApiService {
   }
 
   // GET list of public, future events
-  public getAllTeams(): Observable<ITeam[]> {
+  public getAllTestTeams(): Observable<ITeam[]> {
     return this.http
       .get<ITeam[]>(`${API_URL}/test/teams`)
       .pipe(
