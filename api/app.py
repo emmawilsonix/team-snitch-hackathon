@@ -45,19 +45,21 @@ def handle_message(event_data):
 
     # Iterate through message body looking for the destination user. Use the first match.
     elements = message["blocks"][0]["elements"][0]["elements"]
-    dest_user = None
+    mentioned_user = None
     for element in elements:
         if element["type"] == "user" and element["user_id"] != SLACKBOT_USERID:
             mentioned_user = slack_client.users_info(user=element["user_id"])
             break
+    if mentioned_user is not None:
+        source_user_email = source_user["user"]["profile"]["email"]
+        mentioned_user_email = mentioned_user["user"]["profile"]["email"]
+        try_grant_points(source_user_email, mentioned_user_email)
+        print(source_user_email + " granted a point to " + mentioned_user_email)
+    else:
+        print("Unable to grant points...")
 
-    source_user_email = source_user["user"]["profile"]["email"]
-    mentioned_user_email = mentioned_user["user"]["profile"]["email"]
-
-    try_grant_points(source_user_email, mentioned_user_email)
 
 def try_grant_points(source_user_email, mentioned_user_email):
-    print(source_user_email + "granted a point" + mentioned_user_email)
     return True
 
 
