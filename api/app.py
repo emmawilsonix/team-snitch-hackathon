@@ -102,6 +102,23 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
 def handle_user_joined_channel(event_data):
     print(event_data)
 
+    joined=event_data["user"]
+
+    msg = """Hey <@{joined}> :wave: I'm <@{snitch}>!
+
+<@{snitch}> is a Harry Potter inspired slack bot designed to encourage and celebrate Little Big Wins by giving house points to your fellow IXers.
+
+You'll be sorted into a team and you can win points for your team by showing off your IX class! You can award points to other IXers by @ mentioning me and someone you want to give points to on slack! Just tell me how many points to give them and I am on it! 
+
+Looks like you've been sorted into {team}! Congratulations that's one of the best ones.
+
+⚡ Make sure to check out the leaderboard <https://snitch-leaderboard.herokuapp.com/|here>! ⚡
+
+⚡ And get to snitching! ⚡""".format(joined=joined, snitch=SLACKBOT_USERID, team="hufflepuff")
+
+    print("Sending %s the following alert: %s" %(joined, msg))
+    slack_client.chat_postMessage(channel=joined, text=msg)
+
 
 
 if __name__ == '__main__':
