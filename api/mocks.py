@@ -1,77 +1,57 @@
 # /users
 mock_user_list = [
     {
+        "userID": 4,
+        "teamID": 4,
+        "emailAddress": "meeral.qureshi@indexexchange.com",
+        "points": 2,
+        "img": "../../assets/images/meeral.png"
+    },
+    {
         "userID": 1,
-        "teamID": 1,
-        "emailAddress": "hackathon.lastname@tumblr.com",
-        "points": 123
+        "teamID": 2,
+        "emailAddress": "cameron.ouellette@indexexchange.com",
+        "points": 1,
+        "img": "../../assets/images/cameron.png"
     },
     {
         "userID": 2,
         "teamID": 2,
-        "emailAddress": "something.weird@nowhere.com",
-        "points": 456
+        "emailAddress": "kaylin.lee@indexexchange.com",
+        "points": 0,
+        "img": "../../assets/images/kaylin.png"
     },
     {
         "userID": 3,
         "teamID": 1,
-        "emailAddress": "2020.didnthappen@didnthappen.com",
-        "points": 789
-    },
-    {
-        "userID": 4,
-        "teamID": 1,
-        "emailAddress": "josh.thebest@josh.net",
-        "points": 111
-    },
-    {
-        "userID": 5,
-        "teamID": 3,
-        "emailAddress": "michaelangelo.ninja@ninjaturtles.ca",
-        "points": 1337
-    },
-    {
-        "userID": 6,
-        "teamID": 2,
-        "emailAddress": "jeff.bezos@match.com",
-        "points": 1010101010101
-    },
-    {
-        "userID": 7,
-        "teamID": 1,
-        "emailAddress": "arya.stark@kingslanding.io",
-        "points": 2323
-    },
-    {
-        "userID": 8,
-        "teamID": 4,
-        "emailAddress": "jon.snow@thewalltbh.com",
-        "points": 34
+        "emailAddress": "kimberly.smith@indexexchage.com",
+        "points": 0,
+        "img": "../../assets/images/kim.png"
     }
 ]
 
 # /teams
 mock_teams_list = [
     {
+        "name": "Yay Orange",
+        "teamID": 4,
+        "team_points": 2
+    },
+    {
         "name": "Coffee Cat",
         "teamID": 2,
-        "team_points": 100
+        "team_points": 1
     },
     {
         "name": "Party Parrot",
         "teamID": 1,
-        "team_points": 3000
+        "team_points": 0
     },
     {
         "name": "Dancing Banana",
         "teamID": 3,
-        "team_points": 200
+        "team_points": 0 
     },
-    {
-        "name": "Yay Orange",
-        "teamID": 4,
-        "team_points": 50
-    }
 ]
 
 # /teams/<id>

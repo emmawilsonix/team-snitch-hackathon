@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ITeam, ITeamNameMappings, IUser } from '../models/models';
+import { ITeam, ITeamImgMappings, ITeamNameMappings, IUser } from '../models/models';
 import { LeaderboardApiService } from '../services/leaderboard-api.service';
 
 @Component({
@@ -12,6 +12,28 @@ export class IndividualLeaderboardComponent implements OnInit {
   private usersList: IUser[];
   private teamsList: ITeam[];
   private teamMappings: ITeamNameMappings = {};
+  private teamImgMappings: ITeamImgMappings = {
+    1: {
+      img: '../../assets/images/parrot.png',
+      height: '18px',
+      width: '26.5px'
+    },
+    2: {
+      img: '../../assets/images/cat.png',
+      height: '24px',
+      width: '24px'
+    },
+    3: {
+      img: '../../assets/images/banana.png',
+      height: '25px',
+      width: '20px'
+    },
+    4: {
+      img: '../../assets/images/orange.png',
+      height: '21px',
+      width: '25px'
+    }
+  };
 
 
   constructor(private apiService: LeaderboardApiService) { }

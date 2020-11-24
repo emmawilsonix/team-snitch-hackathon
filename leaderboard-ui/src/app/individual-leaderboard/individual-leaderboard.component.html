@@ -2,10 +2,14 @@
 
 <mat-list>
 	<mat-list-item *ngFor="let user of usersList; index as i;" [ngClass]="user.teamName.split(' ').join('-').toLowerCase()">
-        <span matListIcon class="placement">{{i+1}}</span>
-		<img matListAvatar src="../../assets/images/kaylin.png">
+		<span matListIcon class="placement">{{i+1}}</span>
+		<img matListAvatar [src]="user.img">
 		<h3 matLine>{{user.name}}</h3>
-		<p matLine>{{user.teamName}}</p>
+		<p matLine>{{user.teamName}} 
+			<img class="team-image" 
+			[style.height]="teamImgMappings[user.teamID].height"
+			[style.width]="teamImgMappings[user.teamID].width"
+			[src]="teamImgMappings[user.teamID].img"></p>
         <span class="points">{{user.points}} pts</span>
 	</mat-list-item>
 </mat-list>
