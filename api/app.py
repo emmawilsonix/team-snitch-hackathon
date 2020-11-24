@@ -38,7 +38,6 @@ SLACKBOT_USERID="U01F944MG3X"
 @slack_events_adapter.on("app_mention")
 def handle_app_mention(event_data):
     message = event_data["event"]
-    channel = message["channel"]
 
     # Get the user who initiated the @mention
     source_user = slack_client.users_info(user=message["user"])
@@ -47,6 +46,7 @@ def handle_app_mention(event_data):
     elements = message["blocks"][0]["elements"][0]["elements"]
     mentioned_user = None
     slack_message = ""
+    notify_user = ""
     for element in elements:
         if element["type"] == "user" and element["user_id"] != SLACKBOT_USERID:
             mentioned_user = slack_client.users_info(user=element["user_id"])
@@ -57,18 +57,21 @@ def handle_app_mention(event_data):
         if try_grant_points(source_user_email, mentioned_user_email):
             print(source_user_email + " granted a point to " + mentioned_user_email + "...")
             slack_message = "Hey <@" + mentioned_user["user"]["id"] + "> you got a point from <@" + source_user["user"]["id"] + ">!"
+            notify_user = mentioned_user["user"]["id"]
         else:
             print(source_user_email + " failed to give a point to " + mentioned_user_email + "...")
             slack_message = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> a point... can you try again?"
+            notify_user = source_user["user"]["id"]
     else:
-        slack_message = "Hey <@" + source_user["user"]["id"] + "> something funny just happened... can you try again?"
+        slack_message = "Hey <@" + source_user["user"]["id"] + "> something funny just happened... can you try granting that point again?"
+        notify_user = source_user["user"]["id"]
         print("Unable to grant points...")
 
-    slack_client.chat_postMessage(channel=channel, text=slack_message)
+    slack_client.chat_postMessage(channel=notify_user, text=slack_message)
 
 
 def try_grant_points(source_user_email, mentioned_user_email):
-    return False
+    return True
 
 
 
