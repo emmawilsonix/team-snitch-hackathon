@@ -28,6 +28,13 @@ def points_list():
             # select entire points list
             pass
     elif request.method == 'POST':
+        userID = request.form.get('userID')
+        sourceUserID = request.form.get('sourceUserID')
+        points = request.form.get('points')
+
+        if userID is None or sourceUserID is None or points is None:
+            return "Bad request, incorrect POST information", 400
+
         # create the points
         pass
 
