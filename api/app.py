@@ -38,6 +38,15 @@ class Teams(db.Model):
     teamID = db.Column(db.Integer, primary_key=True)
     emailAddress = db.Column(db.String(255))
 
+class Points(db.Model):
+
+    date = db.Column(db.String(255), primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('users.userID'), primary_key=True)
+    sourceUserID = db.Column(db.Integer, db.ForeignKey('users.userID'), primary_key=True)
+    points = db.Column(db.Integer)
+    def serialize(self):
+        return {"points": self.points}
+
 @app.route('/users', methods=['GET', 'POST'])
 def users_list():
     if request.method == 'GET':
@@ -53,7 +62,15 @@ def users_list():
         else:
             
             users = Users.query.all()
-            return jsonify([user.serialize() for user in users])
+            response = [user.serialize() for user in users]
+            for user in response:
+                points = Points.query.filter_by(userID=user.get("userID")).all()
+                total_points = 0
+                for p in points:
+                    print(p)
+                    total_points += p.serialize().get('points')
+                user['points'] = total_points
+            return jsonify(response)
     elif request.method == 'POST':
         data = request.json
         user = Users(teamID=data.get('teamID'), emailAddress=data.get('emailAddress'))
