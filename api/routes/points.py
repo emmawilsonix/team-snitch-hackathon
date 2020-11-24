@@ -6,16 +6,24 @@ def points_list():
     if request.method == 'GET':
         if request.query_string:
             if (
-                request.args.get('teamID') is None and 
+                request.args.get('userID') is None and 
+                request.args.get('sourceUserID') is None and
                 request.args.get('orderby') is None
             ):
-                return "Bad request param breh", 400
-            if request.args.get('teamID'):
-                # do team ID select
+                return "Bad request param", 400
+            else if request.args.get('userID') and request.args.get('sourceUserID'):
+                # return the points list with userID and sourceUserID
                 pass
-            if request.args.get('orderby'):
+            else if request.args.get('userID'):
+                # return the points list with userID 
+                pass
+            else if request.args.get('sourceUserID'):
+                # return the points list with sourceUserID 
+                pass
+            else:
                 # do orderby select
                 pass
+        
         else:
             # select entire points list
             pass
@@ -27,4 +35,4 @@ def points_list():
         return "Bad request method", 405
 
 
-    return "points "
+    return "points"
