@@ -48,7 +48,7 @@ class Users(db.Model):
     def serialize(self):
         image_url = "../../assets/images/unknown.png"
         try: 
-            user_info = slack_client.users_lookupByEmail(email=emailAddress)
+            user_info = slack_client.users_lookupByEmail(email=self.emailAddress)
             image_url = user_info["user"]["profile"]["image_72"]
         except:
             print("oops couldn't get an image for the user")
