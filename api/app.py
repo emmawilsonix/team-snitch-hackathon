@@ -115,3 +115,38 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
+
+class User(db.Model):
+    userID = db.Column(db.Integer, primary_key=True)
+    teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
+    emailAddress = db.Column(db.String(255))
+
+@app.route('/users', methods=['GET', 'POST'])
+def users_list():
+    if request.method == 'GET':
+        if request.query_string:
+            if (
+                request.args.get('teamID') is None and 
+                request.args.get('orderby') is None
+            ):
+                return "Bad request param", 400
+            if request.args.get('teamID'):
+                # do team ID select
+                pass
+            if request.args.get('orderby'):
+                # do orderby select
+                pass
+        else:
+            # select entire users list
+            pass
+    elif request.method == 'POST':
+        # create the user breh
+        pass
+
+    else:
+        return "Bad request method breh", 405
+
+
+    return "users brah"
+
+    
