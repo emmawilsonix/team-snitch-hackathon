@@ -1,0 +1,17 @@
+<div class="crown-container" *ngIf="placement === 0">
+  <img class="crown-image" [src]="crownImg">
+</div>
+<div class="crown-container-hidden" *ngIf="team.teamID !== 4">
+</div>
+<mat-card class="team-panel" [style.background-color]="team.colour">
+  <div class="imgContainer">
+    <img mat-card-image src="{{team.img}}">
+  </div> 
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-card-title>{{team.name}}</mat-card-title>
+    <mat-card-subtitle>{{team.team_points}} <span class="pts">pts</span></mat-card-subtitle>
+  </mat-card-content>
+</mat-card>

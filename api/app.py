@@ -48,14 +48,14 @@ class Users(db.Model):
     def serialize(self):
         image_url = "../../assets/images/unknown.png"
         try: 
-            user_info = slack_client.users_lookupByEmail(email=self.emailAddress)
+            user_info = slack_client.users_lookupByEmail(email=emailAddress)
             image_url = user_info["user"]["profile"]["image_72"]
         except:
             print("oops couldn't get an image for the user")
         return {"userID": self.userID,
                 "teamID": self.teamID,
                 "emailAddress": self.emailAddress,
-                "img": image_url}
+                "img": my_image_url}
 
 class Teams(db.Model):
     teamID = db.Column(db.Integer, primary_key=True)
@@ -107,7 +107,6 @@ def users_list():
         return jsonify(user.serialize())
     else:
         return "Bad request method breh", 405
-
 
 @app.route('/test/users', methods=['GET'])
 def testusersget():

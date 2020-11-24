@@ -1,22 +1,32 @@
 # /users
 mock_user_list = [
     {
+        "userID": 4,
+        "teamID": 4,
+        "emailAddress": "meeral.qureshi@indexexchange.com",
+        "points": 2,
+        "img": "../../assets/images/meeral.png"
+    },
+    {
         "userID": 1,
-        "teamID": 1,
-        "emailAddress": "hackathon@tumblr.com",
-        "points": 123
+        "teamID": 2,
+        "emailAddress": "cameron.ouellette@indexexchange.com",
+        "points": 1,
+        "img": "../../assets/images/cameron.png"
     },
     {
         "userID": 2,
         "teamID": 2,
-        "emailAddress": "something@nowhere.com",
-        "points": 456
+        "emailAddress": "kaylin.lee@indexexchange.com",
+        "points": 0,
+        "img": "../../assets/images/kaylin.png"
     },
     {
         "userID": 3,
         "teamID": 1,
-        "emailAddress": "2020@didnthappen.com",
-        "points": 789
+        "emailAddress": "kimberly.smith@indexexchage.com",
+        "points": 0,
+        "img": "../../assets/images/kim.png"
     },
     {
         "userID": 4,
@@ -53,24 +63,24 @@ mock_user_list = [
 # /teams
 mock_teams_list = [
     {
-        "name": "The Underachievers",
+        "name": "Yay Orange",
+        "teamID": 4,
+        "team_points": 2
+    },
+    {
+        "name": "Coffee Cat",
         "teamID": 2,
+        "team_points": 1
     },
     {
-        "name": "NWA",
-        "teamID": 1
+        "name": "Party Parrot",
+        "teamID": 1,
+        "team_points": 0
     },
     {
-        "name": "Flatbush Zombies",
-        "teamID": 3
-    },
-    {
-        "name": "Onyx",
-        "teamID": 4
-    },
-    {
-        "name": "Wu Tang Clan",
-        "teamID": 5
+        "name": "Dancing Banana",
+        "teamID": 3,
+        "team_points": 0 
     }
 ]
 

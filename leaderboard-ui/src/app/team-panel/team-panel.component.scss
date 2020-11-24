@@ -1,0 +1,66 @@
+$text-colour: rgb(255, 255, 255);
+$background-colour: rgb(135, 74, 162);
+
+::ng-deep .mat-card-image:first-child {
+    margin-top: -38px !important;
+}
+
+.team-panel {
+    width: 294px;
+    height: 294px;
+    text-align: center;
+    // background-color: $background-colour;
+    box-shadow: 0px 2px 6px 0px rgba(134, 134, 134, 0.5);
+    font-family: Avenir-Heavy;
+    color: $text-colour;
+    border-radius: 16px;
+    margin-bottom: 56px;
+}
+
+.mat-card-title {
+    font-size: 28px;
+    letter-spacing: 0.88px;
+    font-weight: 900;
+    padding-bottom: 20px;
+}
+
+.mat-card-subtitle {
+    color: $text-colour;
+    font-family: Avenir-Heavy;
+    letter-spacing: 1.19px;
+    font-weight: 900;
+    font-size: 38px;
+}
+
+.imgContainer {
+    height: 152px;
+    width: 180px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    // width: 50%;
+}
+
+img {
+    // height: 152px;
+    // max-width: 100%;
+    max-width: 80%;
+    // max-height: 100%;
+    // object-fit: cover;
+}
+
+.pts {
+    font-size: 24px;
+}
+
+.crown-container { 
+    text-align: center;
+}
+
+.crown-image {
+    width: 120px;
+}
+
+.crown-container-hidden {
+    padding-bottom: 123px;
+}
