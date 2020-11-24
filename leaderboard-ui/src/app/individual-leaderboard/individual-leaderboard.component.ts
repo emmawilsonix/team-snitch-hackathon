@@ -1,17 +1,13 @@
-<<<<<<< HEAD
-import { Component, OnChanges } from '@angular/core';
-=======
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { ITeam, ITeamNameMappings, IUser } from '../models/models';
 import { LeaderboardApiService } from '../services/leaderboard-api.service';
->>>>>>> b65359a5775d7a8cb4f7c6127469db5bf9dd92aa
 
 @Component({
   selector: 'app-individual-leaderboard',
   templateUrl: './individual-leaderboard.component.html',
   styleUrls: ['./individual-leaderboard.component.scss']
 })
-export class IndividualLeaderboardComponent implements OnChanges {
+export class IndividualLeaderboardComponent implements OnInit {
 
   private usersList: IUser[];
   private teamsList: ITeam[];
@@ -20,9 +16,6 @@ export class IndividualLeaderboardComponent implements OnChanges {
 
   constructor(private apiService: LeaderboardApiService) { }
 
-<<<<<<< HEAD
-  ngOnChanges(): void {
-=======
   ngOnInit(): void {
     this.getTestTeams();
     this.getTestUsers();
@@ -56,7 +49,7 @@ export class IndividualLeaderboardComponent implements OnChanges {
       user.name = fullNameString;
       user.teamName = this.teamMappings[user.teamID];
     });
-    return users;
+    return users.sort((a, b) => (b.points) - (a.points));
   }
 
   /** Function to get test teams */
@@ -71,7 +64,6 @@ export class IndividualLeaderboardComponent implements OnChanges {
       },
       console.error
     );
->>>>>>> b65359a5775d7a8cb4f7c6127469db5bf9dd92aa
   }
 
 }
