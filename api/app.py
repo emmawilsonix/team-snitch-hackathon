@@ -44,7 +44,6 @@ def users_list():
             return jsonify(json_list=users)
     elif request.method == 'POST':
         data = request.json
-        print(data)
         user = Users(teamID=data.get('teamID'), emailAddress=data.get('emailAddress'))
         db.session.add(user)
         db.session.commit()
