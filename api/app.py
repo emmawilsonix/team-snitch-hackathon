@@ -196,7 +196,15 @@ def handle_app_mention(event_data):
 ⚡ And get to snitching! ⚡""".format(mentioned=mentioned_user["user"]["id"], points=str(points), source=source_user["user"]["id"], permalink=original_message["permalink"])
                 notify_user = mentioned_user["user"]["id"]
                 #React to the slack post now, for some sense of transparency
-                slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="thumbsup")
+                try:
+                    slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="thumbsup")
+                except:
+                    print("well that's too bad I couldn't react... try again with another emoji")
+                    try:
+                        slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="white_check_mark")
+                    except: 
+                        print("something went really really wrong")
+                        pass
             # If we couldn't grant points, let people know
             else:
                 msg = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> points from you, here's what the computer told me: " + error
