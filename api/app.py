@@ -38,6 +38,9 @@ slack_client = WebClient(token=SLACK_BOT_TOKEN)
 
 SLACKBOT_USERID="U01F944MG3X"
 
+GENERAL_CHANNEL="C01FJ6SBZQU"
+TEST_CHANNEL="C01FF40BAPL"
+
 # Create an event listener for @bot mentions
 @slack_events_adapter.on("app_mention")
 def handle_app_mention(event_data):
@@ -108,6 +111,57 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
 
     return None
 
+# Create an event listener for users joining the #general channel
+@slack_events_adapter.on("member_joined_channel")
+def handle_user_joined_channel(event_data):
+    message = event_data["event"]
+
+    # Only create accounts when certain channels are joined.
+    if message["channel"] != TEST_CHANNEL and message["channel"] != GENERAL_CHANNEL:
+        print("member joined a channel we don't care about...")
+        return
+
+    # Get user info and add them to the DB.
+    joined=message["user"]
+    joined_user = slack_client.users_info(user=joined)
+    joined_user_email = joined_user["user"]["profile"]["email"]
+    team = try_add_user(joined_user_email)
+    if team is None:
+        msg = """Hey <@{joined}> :wave: I'm <@{snitch}>! Looks like you joined #general but something went wrong so I wasn't able to assign you a team. 
+
+Either you already have a house (congrats!) or you should try leaving/re-joining #general.
+
+Much Love :heart: <@snitch>""".format(joined=joined, snitch=SLACKBOT_USERID)
+    else:
+
+        msg = """Hey <@{joined}> :wave: I'm <@{snitch}>!
+
+<@{snitch}> is a Harry Potter inspired slack bot designed to encourage and celebrate Little Big Wins by giving house points to your fellow IXers.
+
+You'll be sorted into a team and you can win points for your team by showing off your IX class! 
+
+You can award points to other IXers by @ mentioning me and someone you want to give points to on slack! Just tell me how many points to give them and I am on it! 
+
+Looks like you've been sorted into *{team}*! Congratulations that's one of the best ones.
+
+⚡ Make sure to check out the leaderboard <https://snitch-leaderboard.herokuapp.com/|here>! ⚡
+
+⚡ And get to snitching! ⚡
+
+Much Love :heart: <@snitch>""".format(joined=joined, snitch=SLACKBOT_USERID, team=team)
+
+    print("Sending %s the following alert: %s" %(joined, msg))
+    slack_client.chat_postMessage(channel=joined, text=msg)
+
+def try_add_user(user_email):
+    """
+    try_add_user tries to add a user to the db. 
+        @user_email = the e-mail of the user being added
+    function returns the house the user belongs to. 
+    Return None if the user cannot be created.
+    If the user already exists return their team.
+    """
+    return "hufflepuff"
 
 
 if __name__ == '__main__':
