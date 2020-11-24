@@ -4,6 +4,7 @@ from flask_mysqldb import MySQL
 from sqlalchemy.sql import text
 from slackeventsapi import SlackEventAdapter
 import os
+import random
 from slack_sdk import WebClient
 
 app = Flask(__name__)
