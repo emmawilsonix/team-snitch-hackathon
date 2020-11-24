@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_mysqldb import MySQL
 from sqlalchemy.sql import text
 from slackeventsapi import SlackEventAdapter
 import os
@@ -7,9 +8,12 @@ from slack_sdk import WebClient
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DBHOST", "mysql://root:lolviper@localhost/Hogwarts")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-db = SQLAlchemy(app)
+app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST", "us-cdbr-east-02.cleardb.com")
+app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER", "b624ad11003645")
+app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD", "viper67") #this one is fake
+app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB", "heroku_59a59d73fbb7df4")
+
+mysql = MySQL(app)
 
 @app.route("/")
 def home():
@@ -95,6 +99,13 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
         @points = an int representing the number of points being granted
     function returns None if no errors occur during execution, and a string representing the error if an error does occur.
     """
+
+    query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s;"""
+    cur = mysql.connection.cursor()
+    cur.execute(query, (source_user_email, mentioned_user_email, points))
+    mysql.connection.commit()
+    cur.close()
+
     return None
 
 
