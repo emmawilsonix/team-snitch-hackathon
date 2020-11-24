@@ -1,15 +1,20 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_mysqldb import MySQL
 from sqlalchemy.sql import text
 from slackeventsapi import SlackEventAdapter
 import os
+import random
 from slack_sdk import WebClient
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DBHOST", "mysql://root:lolviper@localhost/Hogwarts")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-db = SQLAlchemy(app)
+app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST", "us-cdbr-east-02.cleardb.com")
+app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER", "b624ad11003645")
+app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD", "viper67") #this one is fake
+app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB", "heroku_59a59d73fbb7df4")
+
+mysql = MySQL(app)
 
 @app.route("/")
 def home():
@@ -24,6 +29,10 @@ def testdb():
         print(e)
         return '<h1>Something is broken.</h1>'
 
+# todo: Pull these from the db
+TEAM_IDS=[189651,189641,189631,189661]
+TEAM_NAME={189651: "Coffee Cat",189641: "Dancing Banana",189631: "Party Parrot",189661: "Yay Orange"}
+
 # Bind the Events API route to your existing Flask app
 SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
 slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
@@ -33,7 +42,6 @@ SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 slack_client = WebClient(token=SLACK_BOT_TOKEN)
 
 SLACKBOT_USERID="U01F944MG3X"
-
 GENERAL_CHANNEL="C01FJ6SBZQU"
 TEST_CHANNEL="C01FF40BAPL"
 
@@ -98,7 +106,15 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
         @points = an int representing the number of points being granted
     function returns None if no errors occur during execution, and a string representing the error if an error does occur.
     """
-    return None
+    try:
+        query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s)"""
+        cur = mysql.connection.cursor()
+        cur.execute(query, (source_user_email, mentioned_user_email, points))
+        mysql.connection.commit()
+        cur.close()
+        return None
+    except:
+        return "Something something database?"
 
 # Create an event listener for users joining the #general channel
 @slack_events_adapter.on("member_joined_channel")
@@ -150,7 +166,18 @@ def try_add_user(user_email):
     Return None if the user cannot be created.
     If the user already exists return their team.
     """
-    return "hufflepuff"
+
+    query="""INSERT INTO users (teamID, emailAddress) VALUES (%s, %s)"""
+    print(query)
+    team_assign=random.choice(TEAM_IDS)
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute(query, (team_assign, user_email))
+        mysql.connection.commit()
+        cur.close()
+        return TEAM_NAME[team_assign]
+    except:
+        return None
 
 
 if __name__ == '__main__':
