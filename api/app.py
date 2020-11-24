@@ -28,6 +28,10 @@ def testdb():
         print(e)
         return '<h1>Something is broken.</h1>'
 
+# todo: Pull these from the db
+TEAM_IDS=[189651,189641,189631,189661]
+TEAM_NAME={189651: "Coffee Cat",189641: "Dancing Banana",189631: "Party Parrot",189661: "Yay Orange"}
+
 # Bind the Events API route to your existing Flask app
 SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
 slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
@@ -37,7 +41,6 @@ SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 slack_client = WebClient(token=SLACK_BOT_TOKEN)
 
 SLACKBOT_USERID="U01F944MG3X"
-
 GENERAL_CHANNEL="C01FJ6SBZQU"
 TEST_CHANNEL="C01FF40BAPL"
 
@@ -103,11 +106,11 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
     function returns None if no errors occur during execution, and a string representing the error if an error does occur.
     """
 
-    query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s;"""
-    cur = mysql.connection.cursor()
-    cur.execute(query, (source_user_email, mentioned_user_email, points))
-    mysql.connection.commit()
-    cur.close()
+    #query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s;"""
+    #cur = mysql.connection.cursor()
+    #cur.execute(query, (source_user_email, mentioned_user_email, points))
+    #mysql.connection.commit()
+    #cur.close()
 
     return None
 
@@ -161,7 +164,15 @@ def try_add_user(user_email):
     Return None if the user cannot be created.
     If the user already exists return their team.
     """
-    return "hufflepuff"
+
+    query="""INSERT INTO users (teamID, emailAddress) VALUES (%s, %s)"""
+    team_assign=random.choice(TEAM_IDS)
+    cur = mysql.connection.cursor()
+    cur.execute(query, (user_email, team_assign))
+    mysql.connection.commit()
+    cur.close()
+
+    return TEAM_NAME[team_assign]
 
 
 if __name__ == '__main__':
