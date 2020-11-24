@@ -1,0 +1,34 @@
+::ng-deep .mat-grid-tile .mat-figure {
+    // justify-content: flex-start !important ;
+    // align-items: flex-start !important;
+ }
+ 
+ .standing {
+    height: 485px;
+    background: rgb(241, 243, 247);
+    border-radius: 0px;
+ }
+
+ .houseLeaderboard {
+    padding-left: 72px;
+    width: 267px;
+    height: 38px;
+    color: rgb(45, 45, 45);
+    font-size: 28px;
+    font-family: Avenir-Medium;
+    font-weight: 500;
+    letter-spacing: 0.88px;
+ }
+
+ .team-placement {
+    position: relative;
+    left: 50px;
+    bottom: 180px;
+    width: 41px;
+    height: 38px;
+    color: rgb(45, 45, 45);
+    font-size: 28px;
+    font-family: Avenir-Medium;
+    font-weight: 500;
+    letter-spacing: 0.88px;
+ }

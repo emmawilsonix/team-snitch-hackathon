@@ -1,0 +1,14 @@
+<h2 class="houseLeaderboard">House Leaderboard</h2>
+
+<div class="standing">
+    <mat-grid-list cols= "4" rowHeight= "485px">
+        <mat-grid-tile *ngFor="let team of teamsList; index as i;" [ngSwitch]='i' [colspan]="1" [rowspan]="1">
+            <span class="team-placement">{{i+1}}<span *ngSwitchCase="0">st</span>
+                <span *ngSwitchCase="1">nd</span>
+                <span *ngSwitchCase="2">rd</span>
+                <span *ngSwitchCase="3">th</span>
+            </span>
+            <app-team-panel [team]='team' [placement]='i'></app-team-panel>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>

@@ -13,3 +13,6 @@ A Hogwarts House Cup App for Slack
 # Running the backend with Docker:
 - `cd api && docker build -t api .`
 - `docker run api -d`
+
+# Running the frontend with Docker (without APIs)
+- `docker-compose up --build -d leaderboard-ui`
