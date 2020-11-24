@@ -4,15 +4,12 @@ import {Observable} from 'rxjs';
 import 'rxjs/add/operator/catch';
 import {API_URL} from '../env';
 import {ITeam} from './team.model';
+import * as request from 'superagent';
 
 @Injectable()
 export class TeamsApiService {
 
-  constructor(private http: HttpClient) {
-  }
-
-  private static _handleError(err: HttpErrorResponse | any) {
-    return Observable.throw(err.message || 'Error: Unable to complete request.');
+  constructor() {
   }
 
   // GET list of public, future events
