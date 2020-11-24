@@ -7,7 +7,7 @@ def teams_list(id):
         if request.query_string:
             if request.args.get('orderby') is None:
                 return "Bad request param breh", 400
-            if request.args.get('orderby'):
+            else:
                 # do orderby select
                 pass
         else if id != "":
