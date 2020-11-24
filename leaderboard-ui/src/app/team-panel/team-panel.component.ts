@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-team-panel',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./team-panel.component.scss']
 })
 export class TeamPanelComponent implements OnInit {
+
+  @Input() team;
 
   constructor() { }
 

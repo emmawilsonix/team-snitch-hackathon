@@ -8,6 +8,7 @@ import { IndividualLeaderboardComponent } from './individual-leaderboard/individ
 import { TeamPanelComponent } from './team-panel/team-panel.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -22,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     MatCardModule,
+    MatGridListModule,
     BrowserAnimationsModule
   ],
   providers: [],
