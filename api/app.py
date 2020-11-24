@@ -41,6 +41,9 @@ SLACKBOT_USERID="U01F944MG3X"
 GENERAL_CHANNEL="C01FJ6SBZQU"
 TEST_CHANNEL="C01FF40BAPL"
 
+# Locally cache profile pictures because slack seems to be rate limiting us.
+profile_pic_cache = {}
+
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True)
     teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
@@ -48,8 +51,12 @@ class Users(db.Model):
     def serialize(self):
         image_url = "../../assets/images/unknown.png"
         try: 
-            user_info = slack_client.users_lookupByEmail(email=emailAddress)
-            image_url = user_info["user"]["profile"]["image_72"]
+            if self.emailAddress in profile_pic_cache:
+                image_url = profile_pic_cache[self.emailAddress]
+            else:
+                user_info = slack_client.users_lookupByEmail(email=self.emailAddress)
+                image_url = user_info["user"]["profile"]["image_72"]
+                profile_pic_cache[self.emailAddress] = image_url
         except:
             print("oops couldn't get an image for the user")
         return {"userID": self.userID,
