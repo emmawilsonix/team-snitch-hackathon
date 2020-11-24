@@ -106,14 +106,15 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
         @points = an int representing the number of points being granted
     function returns None if no errors occur during execution, and a string representing the error if an error does occur.
     """
-
-    #query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s;"""
-    #cur = mysql.connection.cursor()
-    #cur.execute(query, (source_user_email, mentioned_user_email, points))
-    #mysql.connection.commit()
-    #cur.close()
-
-    return None
+    try:
+        query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s)"""
+        cur = mysql.connection.cursor()
+        cur.execute(query, (source_user_email, mentioned_user_email, points))
+        mysql.connection.commit()
+        cur.close()
+        return None
+    except:
+        return "Something something database?"
 
 # Create an event listener for users joining the #general channel
 @slack_events_adapter.on("member_joined_channel")
