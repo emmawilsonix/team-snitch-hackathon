@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { ITeam, ITeamImgMappings, ITeamNameMappings, IUser } from '../models/models';
 import { LeaderboardApiService } from '../services/leaderboard-api.service';
 
@@ -71,7 +71,7 @@ export class IndividualLeaderboardComponent implements OnInit {
       user.name = fullNameString;
       user.teamName = this.teamMappings[user.teamID];
     });
-    return users;
+    return users.sort((a, b) => (b.points) - (a.points));
   }
 
   /** Function to get test teams */

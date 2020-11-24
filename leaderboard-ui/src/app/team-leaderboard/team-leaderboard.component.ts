@@ -26,6 +26,11 @@ export class TeamLeaderboardComponent implements OnInit {
     4: {
       colour: 'rgb(64, 150, 70)',
       image: 'assets/images/orange.png'
+    },
+    // Placeholder
+    5: {
+      colour: 'rgb(64, 150, 70)',
+      image: 'assets/images/orange.png'
     }
   };
 
@@ -44,7 +49,7 @@ export class TeamLeaderboardComponent implements OnInit {
           team.colour = this.teamStyleMappings[team.teamID].colour;
           team.img = this.teamStyleMappings[team.teamID].image;
         });
-        this.teamsList = response;
+        this.teamsList = response.splice(0,4).sort((a, b) => (b.team_points) - (a.team_points));
       },
       console.error
     );
