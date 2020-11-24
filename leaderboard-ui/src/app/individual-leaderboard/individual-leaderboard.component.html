@@ -3,7 +3,7 @@
 <mat-list>
 	<mat-list-item *ngFor="let user of usersList; index as i;" [ngClass]="user.teamName.split(' ').join('-').toLowerCase()">
 		<span matListIcon class="placement">{{i+1}}</span>
-		<img matListAvatar [src]="user.img">
+		<img class="user-image" matListAvatar [src]="user.img">
 		<h3 matLine>{{user.name}}</h3>
 		<p matLine>{{user.teamName}} 
 			<img class="team-image" 
