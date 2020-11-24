@@ -25,6 +25,22 @@ app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB", "heroku_59a59d73fbb7df4")
 
 mysql = MySQL(app)
 
+# todo: Pull these from the db
+TEAM_IDS=[189651,189641,189631,189661]
+TEAM_NAME={189651: "Coffee Cat",189641: "Dancing Banana",189631: "Party Parrot",189661: "Yay Orange"}
+
+# Bind the Events API route to your existing Flask app
+SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
+slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
+
+# Create a SlackClient for your bot to use for Web API requests
+SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
+slack_client = WebClient(token=SLACK_BOT_TOKEN)
+
+SLACKBOT_USERID="U01F944MG3X"
+GENERAL_CHANNEL="C01FJ6SBZQU"
+TEST_CHANNEL="C01FF40BAPL"
+
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True)
     teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
@@ -94,23 +110,6 @@ def testteamsgetbyid(id):
     for d in mock_team_with_users:
         if int(d['teamID']) == int(request.view_args['id']):
             return jsonify(d)
-
-
-# todo: Pull these from the db
-TEAM_IDS=[189651,189641,189631,189661]
-TEAM_NAME={189651: "Coffee Cat",189641: "Dancing Banana",189631: "Party Parrot",189661: "Yay Orange"}
-
-# Bind the Events API route to your existing Flask app
-SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
-slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
-
-# Create a SlackClient for your bot to use for Web API requests
-SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
-slack_client = WebClient(token=SLACK_BOT_TOKEN)
-
-SLACKBOT_USERID="U01F944MG3X"
-GENERAL_CHANNEL="C01FJ6SBZQU"
-TEST_CHANNEL="C01FF40BAPL"
 
 # Create an event listener for @bot mentions
 @slack_events_adapter.on("app_mention")
