@@ -8,6 +8,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class TeamPanelComponent implements OnInit {
 
   @Input() team;
+
+  @Input() placement;
   private crownImg = '../../assets/images/crown.svg';
 
   constructor() { }
