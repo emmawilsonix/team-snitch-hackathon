@@ -68,7 +68,6 @@ class Teams(db.Model):
 
 
 class Points(db.Model):
-
     date = db.Column(db.String(255), primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('users.userID'), primary_key=True)
     sourceUserID = db.Column(db.Integer, db.ForeignKey('users.userID'), primary_key=True)
@@ -219,7 +218,7 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
     try:
         query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s)"""
         cur = mysql.connection.cursor()
-        cur.execute(query, (source_user_email, mentioned_user_email, points))
+        cur.execute(query, (mentioned_user_email, source_user_email, points))
         mysql.connection.commit()
         cur.close()
         return None
