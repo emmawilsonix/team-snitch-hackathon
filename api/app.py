@@ -127,9 +127,11 @@ Much Love :heart: <@snitch>""".format(joined=joined, snitch=SLACKBOT_USERID)
 
 <@{snitch}> is a Harry Potter inspired slack bot designed to encourage and celebrate Little Big Wins by giving house points to your fellow IXers.
 
-You'll be sorted into a team and you can win points for your team by showing off your IX class! You can award points to other IXers by @ mentioning me and someone you want to give points to on slack! Just tell me how many points to give them and I am on it! 
+You'll be sorted into a team and you can win points for your team by showing off your IX class! 
 
-Looks like you've been sorted into {team}! Congratulations that's one of the best ones.
+You can award points to other IXers by @ mentioning me and someone you want to give points to on slack! Just tell me how many points to give them and I am on it! 
+
+Looks like you've been sorted into *{team}*! Congratulations that's one of the best ones.
 
 ⚡ Make sure to check out the leaderboard <https://snitch-leaderboard.herokuapp.com/|here>! ⚡
 
