@@ -42,6 +42,9 @@ SLACKBOT_USERID="U01F944MG3X"
 GENERAL_CHANNEL="C01FJ6SBZQU"
 TEST_CHANNEL="C01FF40BAPL"
 
+# Locally cache profile pictures because slack seems to be rate limiting us.
+profile_pic_cache = {}
+
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True)
     teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
@@ -49,8 +52,12 @@ class Users(db.Model):
     def serialize(self):
         image_url = "../../assets/images/unknown.png"
         try: 
-            user_info = slack_client.users_lookupByEmail(email=emailAddress)
-            image_url = user_info["user"]["profile"]["image_72"]
+            if self.emailAddress in profile_pic_cache:
+                image_url = profile_pic_cache[self.emailAddress]
+            else:
+                user_info = slack_client.users_lookupByEmail(email=self.emailAddress)
+                image_url = user_info["user"]["profile"]["image_72"]
+                profile_pic_cache[self.emailAddress] = image_url
         except:
             print("oops couldn't get an image for the user")
         return {"userID": self.userID,
@@ -69,7 +76,6 @@ class Teams(db.Model):
 
 
 class Points(db.Model):
-
     date = db.Column(db.String(255), primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('users.userID'), primary_key=True)
     sourceUserID = db.Column(db.Integer, db.ForeignKey('users.userID'), primary_key=True)
@@ -198,7 +204,15 @@ def handle_app_mention(event_data):
 ⚡ And get to snitching! ⚡""".format(mentioned=mentioned_user["user"]["id"], points=str(points), source=source_user["user"]["id"], permalink=original_message["permalink"])
                 notify_user = mentioned_user["user"]["id"]
                 #React to the slack post now, for some sense of transparency
-                slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="thumbsup")
+                try:
+                    slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="thumbsup")
+                except:
+                    print("well that's too bad I couldn't react... try again with another emoji")
+                    try:
+                        slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="white_check_mark")
+                    except: 
+                        print("something went really really wrong")
+                        pass
             # If we couldn't grant points, let people know
             else:
                 msg = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> points from you, here's what the computer told me: " + error
@@ -220,7 +234,7 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
     try:
         query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s)"""
         cur = mysql.connection.cursor()
-        cur.execute(query, (source_user_email, mentioned_user_email, points))
+        cur.execute(query, (mentioned_user_email, source_user_email, points))
         mysql.connection.commit()
         cur.close()
         return None
