@@ -53,24 +53,20 @@ mock_user_list = [
 # /teams
 mock_teams_list = [
     {
-        "name": "The Underachievers",
+        "name": "Coffee Cat",
         "teamID": 2,
     },
     {
-        "name": "NWA",
+        "name": "Party Parrot",
         "teamID": 1
     },
     {
-        "name": "Flatbush Zombies",
+        "name": "Dancing Banana",
         "teamID": 3
     },
     {
-        "name": "Onyx",
+        "name": "Yay Orange",
         "teamID": 4
-    },
-    {
-        "name": "Wu Tang Clan",
-        "teamID": 5
     }
 ]
 

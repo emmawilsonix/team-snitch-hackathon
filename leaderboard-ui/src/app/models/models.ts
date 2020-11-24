@@ -10,4 +10,9 @@ export interface IUser {
     emailAddress: string;
     points: number;
     name?: string;
+    teamName?: string;
+}
+
+export interface ITeamMappings {
+    [id: number]: string;
 }
