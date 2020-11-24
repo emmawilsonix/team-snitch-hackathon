@@ -137,7 +137,7 @@ Looks like you've been sorted into *{team}*! Congratulations that's one of the b
 
 ⚡ And get to snitching! ⚡
 
-Much Love :heart: <@snitch>""".format(joined=joined, snitch=SLACKBOT_USERID, team="hufflepuff")
+Much Love :heart: <@snitch>""".format(joined=joined, snitch=SLACKBOT_USERID, team=team)
 
     print("Sending %s the following alert: %s" %(joined, msg))
     slack_client.chat_postMessage(channel=joined, text=msg)
