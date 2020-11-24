@@ -4,6 +4,7 @@ from sqlalchemy.sql import text
 from slackeventsapi import SlackEventAdapter
 import os
 from slack_sdk import WebClient
+import logging
 
 app = Flask(__name__)
 
@@ -42,36 +43,54 @@ def handle_app_mention(event_data):
     # Get the user who initiated the @mention
     source_user = slack_client.users_info(user=message["user"])
 
+    # Default variable values
+    slack_message, msg, mentioned_user = "", "", None
+    notify_user = source_user["user"]["id"]
+    
     # Iterate through message body looking for the destination user. Use the first match.
     elements = message["blocks"][0]["elements"][0]["elements"]
-    mentioned_user = None
-    slack_message = ""
-    notify_user = ""
     for element in elements:
         if element["type"] == "user" and element["user_id"] != SLACKBOT_USERID:
             mentioned_user = slack_client.users_info(user=element["user_id"])
             break
-    if mentioned_user is not None:
-        source_user_email = source_user["user"]["profile"]["email"]
-        mentioned_user_email = mentioned_user["user"]["profile"]["email"]
-        if try_grant_points(source_user_email, mentioned_user_email):
-            print(source_user_email + " granted a point to " + mentioned_user_email + "...")
-            slack_message = "Hey <@" + mentioned_user["user"]["id"] + "> you got a point from <@" + source_user["user"]["id"] + ">!"
-            notify_user = mentioned_user["user"]["id"]
-        else:
-            print(source_user_email + " failed to give a point to " + mentioned_user_email + "...")
-            slack_message = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> a point... can you try again?"
-            notify_user = source_user["user"]["id"]
-    else:
-        slack_message = "Hey <@" + source_user["user"]["id"] + "> something funny just happened... can you try granting that point again?"
-        notify_user = source_user["user"]["id"]
-        print("Unable to grant points...")
 
-    slack_client.chat_postMessage(channel=notify_user, text=slack_message)
+    # If there was a user mention, handle the points.
+    if mentioned_user is not None:
+        if source_user["user"]["id"] == mentioned_user["user"]["id"]:
+            msg = "Hey <@" + source_user["user"]["id"] + "> - nice try but you can only give points to others"
+        else:
+            # Try to get the number of points, default to 1.
+            text = message.get('text')
+            points_array = [int(s) for s in text.split() if s.isdigit()]
+            points = 1 if len(points_array) == 0 else points_array[0]
+
+            source_user_email = source_user["user"]["profile"]["email"]
+            mentioned_user_email = mentioned_user["user"]["profile"]["email"]
+            # Try to grant points
+            error = try_grant_points(source_user_email, mentioned_user_email, points)
+            if error is None:
+                msg = "Hey <@" + mentioned_user["user"]["id"] + "> you got " + points + " points from <@" + source_user["user"]["id"] + ">!"
+                notify_user = mentioned_user["user"]["id"]
+            # If we couldn't grant points, let people know
+            else:
+                msg = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> points from you, here's what the computer told me: " + error
+    # If there was no user mention, handle the error.
+    else:
+        msg = "Hey <@" + source_user["user"]["id"] + "> something funny just happened... can you try granting that point again?"
+
+    slack_client.chat_postMessage(channel=notify_user, text=msg)
+    logging.info("Sending %s the following alert: %s", notify_user, msg)
 
 
 def try_grant_points(source_user_email, mentioned_user_email):
-    return True
+    """
+    try_grant_points tries to grant points to a user. 
+        @source_user_email = the user granting the points
+        @mentioned_user_email = the user getting the points
+        @points = an int representing the number of points being granted
+    function returns None if no errors occur during execution, and a string representing the error if an error does occur.
+    """
+    return None
 
 
 
