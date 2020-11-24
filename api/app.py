@@ -2,9 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from slackeventsapi import SlackEventAdapter
-import slack
 import os
-from slack import WebClient
+from slack_sdk import WebClient
 
 app = Flask(__name__)
 
@@ -44,7 +43,7 @@ def handle_message(event_data):
         channel = message["channel"]
         message = "Hello <@%s>! :tada:" % message["user"]
         print("HELLO")
-        slack_client.api_call("chat.postMessage", channel=channel, text=message)
+        slack_client.chat_postMessage(channel=channel, text=message)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
