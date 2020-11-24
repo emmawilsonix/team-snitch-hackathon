@@ -98,10 +98,9 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
     return None
 
 # Create an event listener for users joining the #general channel
-@slack_events_adapter.on("user_joined_channel")
+@slack_events_adapter.on("member_joined_channel")
 def handle_user_joined_channel(event_data):
     print(event_data)
-    #message = event_data["event"]
 
 
 
