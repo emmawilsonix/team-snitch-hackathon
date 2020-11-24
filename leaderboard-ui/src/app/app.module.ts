@@ -12,6 +12,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { LeaderboardApiService } from './services/leaderboard-api.service';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,9 @@ import { LeaderboardApiService } from './services/leaderboard-api.service';
     MatCardModule,
     MatGridListModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatListModule,
+    BrowserAnimationsModule
   ],
   providers: [
     LeaderboardApiService
