@@ -1,0 +1,16 @@
+.title-container {
+    padding: 32px 0px 48px 40px;
+    display: flex;
+}
+
+.heading-container {
+    padding: 25px 0px 0px 40px;
+}
+
+h1 {
+    color: rgb(29, 66, 138);
+    font-family: Avenir-Medium;
+    font-size: 44px;
+    font-weight: 500;
+    letter-spacing: 1.38px;
+}
