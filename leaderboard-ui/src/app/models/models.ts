@@ -13,6 +13,7 @@ export interface IUser {
     points: number;
     name?: string;
     teamName?: string;
+    img?: string;
 }
 
 export interface ITeamStyles {
@@ -20,8 +21,17 @@ export interface ITeamStyles {
     image: string;
 }
 
+export interface ITeamImageStyles {
+    img: string;
+    height: string;
+    width: string;
+}
 export interface ITeamNameMappings {
     [id: number]: string;
+}
+
+export interface ITeamImgMappings {
+    [id: number]: ITeamImageStyles;
 }
 
 export interface ITeamStylesMappings {

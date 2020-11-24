@@ -14,6 +14,7 @@ $background-colour: rgb(135, 74, 162);
     font-family: Avenir-Heavy;
     color: $text-colour;
     border-radius: 16px;
+    margin-bottom: 56px;
 }
 
 .mat-card-title {
@@ -50,4 +51,16 @@ img {
 
 .pts {
     font-size: 24px;
+}
+
+.crown-container { 
+    text-align: center;
+}
+
+.crown-image {
+    width: 120px;
+}
+
+.crown-container-hidden {
+    padding-bottom: 123px;
 }
