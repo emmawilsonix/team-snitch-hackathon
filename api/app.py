@@ -2,7 +2,6 @@ import random
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
-from routes.users import users_routes
 from routes.home import home_routes
 from flask_cors import CORS
 from mocks import mock_user_list, mock_teams_list, mock_team_with_users
@@ -14,10 +13,46 @@ app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DBHOST", "mysql://root:lolviper@localhost/Hogwarts")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-app.register_blueprint(users_routes)
 app.register_blueprint(home_routes)
 CORS(app)
 db = SQLAlchemy(app)
+
+class Users(db.Model):
+    userID = db.Column(db.Integer, primary_key=True)
+    teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
+    emailAddress = db.Column(db.String(255))
+
+class Teams(db.Model):
+    teamID = db.Column(db.Integer, primary_key=True)
+    emailAddress = db.Column(db.String(255))
+
+@app.route('/users', methods=['GET', 'POST'])
+def users_list():
+    if request.method == 'GET':
+        if request.query_string:
+            if (
+                request.args.get('teamID') is None and 
+                request.args.get('orderby') is None
+            ):
+                return "Bad request param", 400
+            if request.args.get('teamID'):
+                user = Users.query.filter_by(teamID=int(request.args.get('teamID')))
+                return jsonify(user.first()) if user.first() else {}
+        else:
+            
+            users = Users.query.all()
+            return jsonify(json_list=users)
+    elif request.method == 'POST':
+        data = request.json
+        print(data)
+        user = Users(teamID=data.get('teamID'), emailAddress=data.get('emailAddress'))
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify(user)
+    else:
+        return "Bad request method breh", 405
+
 
 @app.route('/test/users', methods=['GET'])
 def testusersget():
@@ -49,7 +84,7 @@ SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
 slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
 
 # Create a SlackClient for your bot to use for Web API requests
-SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 slack_client = WebClient(token=SLACK_BOT_TOKEN)
 
 SLACKBOT_USERID="U01F944MG3X"
@@ -115,38 +150,3 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
-
-class User(db.Model):
-    userID = db.Column(db.Integer, primary_key=True)
-    teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
-    emailAddress = db.Column(db.String(255))
-
-@app.route('/users', methods=['GET', 'POST'])
-def users_list():
-    if request.method == 'GET':
-        if request.query_string:
-            if (
-                request.args.get('teamID') is None and 
-                request.args.get('orderby') is None
-            ):
-                return "Bad request param", 400
-            if request.args.get('teamID'):
-                # do team ID select
-                pass
-            if request.args.get('orderby'):
-                # do orderby select
-                pass
-        else:
-            # select entire users list
-            pass
-    elif request.method == 'POST':
-        # create the user breh
-        pass
-
-    else:
-        return "Bad request method breh", 405
-
-
-    return "users brah"
-
-    
