@@ -30,9 +30,16 @@ class Users(db.Model):
     teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
     emailAddress = db.Column(db.String(255))
     def serialize(self):
+        image_url = "../../assets/images/unknown.png"
+        try: 
+            user_info = slack_client.users_lookupByEmail(email=emailAddress)
+            image_url = user_info["user"]["profile"]["image_72"]
+        except:
+            print("oops couldn't get an image for the user")
         return {"userID": self.userID,
                 "teamID": self.teamID,
-                "emailAddress": self.emailAddress}
+                "emailAddress": self.emailAddress,
+                "img": my_image_url}
 
 class Teams(db.Model):
     teamID = db.Column(db.Integer, primary_key=True)
@@ -51,7 +58,6 @@ def users_list():
                 user = Users.query.filter_by(teamID=int(request.args.get('teamID')))
                 return jsonify(user.first().serialize()) if user.first() else {}
         else:
-            
             users = Users.query.all()
             return jsonify([user.serialize() for user in users])
     elif request.method == 'POST':
