@@ -9,10 +9,14 @@ verify_ssl = true
 flask = "==1.1.2"
 Flask-SQLAlchemy = "==2.4.4"
 mysqlclient = "==2.0.1"
+flask-cors = "*"
 slackeventsapi = "*"
 slackclient = "==2.9.3"
 slack-sdk = "*"
+sqlalchemy = "*"
+pyodbc = "*"
 flask-mysqldb = "*"
+flask-mysql = "*"
 
 [requires]
 python_version = "3.8"

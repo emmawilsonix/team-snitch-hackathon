@@ -1,7 +1,11 @@
-from flask import Flask
+import random
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 from sqlalchemy.sql import text
+from routes.home import home_routes
+from flask_cors import CORS
+from mocks import mock_user_list, mock_teams_list, mock_team_with_users
 from slackeventsapi import SlackEventAdapter
 import os
 import random
@@ -9,6 +13,11 @@ from slack_sdk import WebClient
 
 app = Flask(__name__)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DBHOST", "mysql://root:lolviper@localhost/Hogwarts")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+app.register_blueprint(home_routes)
+CORS(app)
+db = SQLAlchemy(app)
 app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST", "us-cdbr-east-02.cleardb.com")
 app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER", "b624ad11003645")
 app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD", "viper67") #this one is fake
@@ -16,18 +25,66 @@ app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB", "heroku_59a59d73fbb7df4")
 
 mysql = MySQL(app)
 
-@app.route("/")
-def home():
-    return "Welcome to Hogwarts 🧙"
+class Users(db.Model):
+    userID = db.Column(db.Integer, primary_key=True)
+    teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
+    emailAddress = db.Column(db.String(255))
 
-@app.route('/test')
-def testdb():
-    try:
-        db.session.query("1").from_statement(text("SELECT 1")).all()
-        return '<h1>It works.</h1>'
-    except Exception as e:
-        print(e)
-        return '<h1>Something is broken.</h1>'
+class Teams(db.Model):
+    teamID = db.Column(db.Integer, primary_key=True)
+    emailAddress = db.Column(db.String(255))
+
+@app.route('/users', methods=['GET', 'POST'])
+def users_list():
+    if request.method == 'GET':
+        if request.query_string:
+            if (
+                request.args.get('teamID') is None and 
+                request.args.get('orderby') is None
+            ):
+                return "Bad request param", 400
+            if request.args.get('teamID'):
+                user = Users.query.filter_by(teamID=int(request.args.get('teamID')))
+                return jsonify(user.first()) if user.first() else {}
+        else:
+            
+            users = Users.query.all()
+            return jsonify(json_list=users)
+    elif request.method == 'POST':
+        data = request.json
+        user = Users(teamID=data.get('teamID'), emailAddress=data.get('emailAddress'))
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify(user)
+    else:
+        return "Bad request method breh", 405
+
+
+@app.route('/test/users', methods=['GET'])
+def testusersget():
+    if request.args.get('teamID'):
+        arg = request.args.get('teamID')
+        if arg:
+            users = []
+            for d in mock_user_list:
+                if int(d['teamID']) == int(arg):
+                    users.append(d)
+            return jsonify(users)
+    return jsonify(mock_user_list)
+
+@app.route('/test/teams', methods=['GET'])
+def testteamsget():
+    for team in mock_teams_list:
+        team['team_points'] = random.randint(1, 8772274669)
+    return jsonify(mock_teams_list)
+
+@app.route('/test/teams/<id>', methods=['GET'])
+def testteamsgetbyid(id):
+    for d in mock_team_with_users:
+        if int(d['teamID']) == int(request.view_args['id']):
+            return jsonify(d)
+
 
 # todo: Pull these from the db
 TEAM_IDS=[189651,189641,189631,189661]
@@ -38,7 +95,7 @@ SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
 slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
 
 # Create a SlackClient for your bot to use for Web API requests
-SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 slack_client = WebClient(token=SLACK_BOT_TOKEN)
 
 SLACKBOT_USERID="U01F944MG3X"

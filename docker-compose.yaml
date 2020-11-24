@@ -30,6 +30,8 @@ services:
     build: ./leaderboard-ui
     ports:
       - 80:80
+    depends_on:
+      - api
 volumes:
     datavolume:
     schema.sql:
