@@ -17,7 +17,13 @@ def teams_list(id):
             # select entire teams list
             pass
     elif request.method == 'POST':
-        # create the team 
+        teamID = request.form.get('id')
+        teamName = request.form.get('name')
+        
+        if teamID is None or teamName is None:
+            return "Bad request, incorrect POST information", 400
+        
+        # create the team       
         pass
 
     else:
