@@ -61,6 +61,10 @@ class Teams(db.Model):
     teamID = db.Column(db.Integer, primary_key=True)
     emailAddress = db.Column(db.String(255))
 
+# #########################################################
+# ############# front-end api routes !!!! #################
+# #########################################################
+
 @app.route('/users', methods=['GET', 'POST'])
 def users_list():
     if request.method == 'GET':
@@ -110,6 +114,10 @@ def testteamsgetbyid(id):
     for d in mock_team_with_users:
         if int(d['teamID']) == int(request.view_args['id']):
             return jsonify(d)
+
+# #########################################################
+# ############ slack listener routes !!!! #################
+# #########################################################
 
 # Create an event listener for @bot mentions
 @slack_events_adapter.on("app_mention")
