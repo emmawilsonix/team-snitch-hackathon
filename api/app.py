@@ -43,11 +43,11 @@ def handle_message(event_data):
     # Get the user who initiated the @mention
     source_user = slack_client.users_info(user=message["user"])
 
-    # Iterate through message looking for the destination user. Use the first match.
-    elements = message["elements"][0]
+    # Iterate through message body looking for the destination user. Use the first match.
+    elements = message["blocks"][0]["elements"][0]["elements"]
     dest_user = None
     for element in elements:
-        if element["type"] == user and element["user_id"] != SLACKBOT_USERID:
+        if element["type"] == "user" and element["user_id"] != SLACKBOT_USERID:
             mentioned_user = slack_client.users_info(user=element["user_id"])
             break
 
@@ -57,7 +57,7 @@ def handle_message(event_data):
     try_grant_points(source_user_email, mentioned_user_email)
 
 def try_grant_points(source_user_email, mentioned_user_email):
-    print(source_user_email + " granted a point to " + mentioned_user_email)
+    print(source_user_email + "granted a point" + mentioned_user_email)
     return True
 
 
