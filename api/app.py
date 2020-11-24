@@ -29,6 +29,10 @@ class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True)
     teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
     emailAddress = db.Column(db.String(255))
+    def serialize(self):
+        return {"userID": self.userID,
+                "teamID": self.teamID,
+                "emailAddress": self.emailAddress}
 
 class Teams(db.Model):
     teamID = db.Column(db.Integer, primary_key=True)
@@ -45,18 +49,18 @@ def users_list():
                 return "Bad request param", 400
             if request.args.get('teamID'):
                 user = Users.query.filter_by(teamID=int(request.args.get('teamID')))
-                return jsonify(user.first()) if user.first() else {}
+                return jsonify(user.first().serialize()) if user.first() else {}
         else:
             
             users = Users.query.all()
-            return jsonify(json_list=users)
+            return jsonify([user.serialize() for user in users])
     elif request.method == 'POST':
         data = request.json
         user = Users(teamID=data.get('teamID'), emailAddress=data.get('emailAddress'))
         db.session.add(user)
         db.session.commit()
 
-        return jsonify(user)
+        return jsonify(user.serialize())
     else:
         return "Bad request method breh", 405
 
