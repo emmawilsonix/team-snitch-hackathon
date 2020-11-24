@@ -29,8 +29,10 @@ SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
 slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
 
 # Create a SlackClient for your bot to use for Web API requests
-slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
-slack_client = WebClient(token=slack_bot_token)
+SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+slack_client = WebClient(token=SLACK_BOT_TOKEN)
+
+SLACKBOT_USERID="U01F944MG3X"
 
 # Create an event listener for @bot mentions
 @slack_events_adapter.on("app_mention")
@@ -38,12 +40,27 @@ def handle_message(event_data):
     message = event_data["event"]
     print(message)
 
-    # If the incoming message contains "hi", then respond with a "Hello" message
-    if message.get("subtype") is None and "hi" in message.get('text'):
-        channel = message["channel"]
-        message = "Hello <@%s>! :tada:" % message["user"]
-        print("HELLO")
-        slack_client.chat_postMessage(channel=channel, text=message)
+    # Get the user who initiated the @mention
+    source_user = slack_client.users_info(user=message["user"])
+
+    # Iterate through message looking for the destination user. Use the first match.
+    elements = message["elements"][0]
+    dest_user = None
+    for element in elements:
+        if element["type"] == user and element["user_id"] != SLACKBOT_USERID:
+            mentioned_user = slack_client.users_info(user=element["user_id"])
+            break
+
+    source_user_email = source_user["user"]["profile"]["email"]
+    mentioned_user_email = mentioned_user["user"]["profile"]["email"]
+
+    try_grant_points(source_user_email, mentioned_user_email)
+
+def try_grant_points(source_user_email, mentioned_user_email):
+    print(source_user_email + " granted a point to " + mentioned_user_email)
+    return True
+
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
