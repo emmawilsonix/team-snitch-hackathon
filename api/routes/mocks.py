@@ -54,19 +54,23 @@ mock_teams_list = [
     {
         "name": "Party Parrot",
         "teamID": 1,
+        "points": 34
     },
 
     {
         "name": "Dancing Banana",
-        "teamID": 2
+        "teamID": 2,
+        "points": 400
     },
     {
         "name": "Coffee Cat",
-        "teamID": 4
+        "teamID": 4,
+        "points": 500
     },
     {
         "name": "Yay Orange",
-        "teamID": 3
+        "teamID": 3,
+        "points": 6782
     }
 ]
 # /teams/<id>
