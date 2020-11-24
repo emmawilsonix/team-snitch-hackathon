@@ -82,7 +82,7 @@ def handle_app_mention(event_data):
     logging.info("Sending %s the following alert: %s", notify_user, msg)
 
 
-def try_grant_points(source_user_email, mentioned_user_email):
+def try_grant_points(source_user_email, mentioned_user_email, points):
     """
     try_grant_points tries to grant points to a user. 
         @source_user_email = the user granting the points
