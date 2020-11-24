@@ -55,7 +55,7 @@ class Users(db.Model):
         return {"userID": self.userID,
                 "teamID": self.teamID,
                 "emailAddress": self.emailAddress,
-                "img": my_image_url}
+                "img": image_url}
 
 class Teams(db.Model):
     teamID = db.Column(db.Integer, primary_key=True)
