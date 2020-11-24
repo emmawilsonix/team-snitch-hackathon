@@ -29,6 +29,8 @@ def testusersget():
 
 @app.route('/test/teams', methods=['GET'])
 def testteamsget():
+    for team in mock_teams_list:
+        team['team_points'] = random.randint(1, 8772274669)
     return jsonify(mock_teams_list)
 
 @app.route('/test/teams/<id>', methods=['GET'])
