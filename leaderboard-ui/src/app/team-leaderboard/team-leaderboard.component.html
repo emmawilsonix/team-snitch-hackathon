@@ -2,8 +2,8 @@
 
 <div class="standing">
     <mat-grid-list cols= "4" rowHeight= "485px">
-        <mat-grid-tile *ngFor="let house of houseStanding" [colspan]="1" [rowspan]="1">
-            <app-team-panel [team]='house'></app-team-panel>
+        <mat-grid-tile *ngFor="let team of teamsList" [colspan]="1" [rowspan]="1">
+            <app-team-panel [team]='team'></app-team-panel>
         </mat-grid-tile>
     </mat-grid-list>
 </div>

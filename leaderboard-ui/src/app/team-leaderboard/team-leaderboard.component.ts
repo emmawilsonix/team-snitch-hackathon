@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ITeam, ITeamStylesMappings } from '../models/models';
+import { LeaderboardApiService } from '../services/leaderboard-api.service';
 
 @Component({
   selector: 'app-team-leaderboard',
@@ -7,43 +9,44 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TeamLeaderboardComponent implements OnInit {
 
-  public houseStanding = [{
-    teamID: 1,
-    name: "Party Parrot",
-    points: 2710,
-    colour: "rgb(30, 149, 166)",
-    img: "assets/images/parrot.png"
-  },
-  {
-    teamID: 2,
-    name: "Coffee Cat",
-    points: 2599,
-    colour: "rgb(135, 74, 162)",
-    img: "assets/images/cat.png"
-  },
-  {
-    teamID: 3,
-    name: "Dancing Banana",
-    points: 2404,
-    colour: "rgb(217, 169, 0)",
-    img: "assets/images/banana.png"
-  },
-  {
-    teamID: 4,
-    name: "Dancing Orange",
-    points: 2289,
-    colour: "rgb(64, 150, 70)",
-    img: "assets/images/orange.png"
-  }]
+  public teamsList: ITeam[];
+  private teamStyleMappings: ITeamStylesMappings = {
+    1: {
+      colour: 'rgb(30, 149, 166)',
+      image: 'assets/images/parrot.png'
+    },
+    2: {
+      colour: 'rgb(135, 74, 162)',
+      image: 'assets/images/cat.png'
+    },
+    3: {
+      colour: 'rgb(217, 169, 0)',
+      image: 'assets/images/banana.png'
+    },
+    4: {
+      colour: 'rgb(64, 150, 70)',
+      image: 'assets/images/orange.png'
+    }
+  };
 
-  constructor() { }
+  constructor(private apiService: LeaderboardApiService) { }
 
   ngOnInit(): void {
+    this.getTestTeams();
   }
 
-  // Placeholder
-  public getHouseStanding(): void {
-    console.log("Do something Eventually")
+  /** Function to get test teams */
+  public getTestTeams(): void {
+    this.apiService
+      .getAllTestTeams()
+      .subscribe(response => {
+        response.forEach(team => {
+          team.colour = this.teamStyleMappings[team.teamID].colour;
+          team.img = this.teamStyleMappings[team.teamID].image;
+        });
+        this.teamsList = response;
+      },
+      console.error
+    );
   }
-
 }

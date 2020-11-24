@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ITeam, ITeamMappings, IUser } from '../models/models';
+import { ITeam, ITeamNameMappings, IUser } from '../models/models';
 import { LeaderboardApiService } from '../services/leaderboard-api.service';
 
 @Component({
@@ -11,7 +11,7 @@ export class IndividualLeaderboardComponent implements OnInit {
 
   private usersList: IUser[];
   private teamsList: ITeam[];
-  private teamMappings: ITeamMappings = {};
+  private teamMappings: ITeamNameMappings = {};
 
 
   constructor(private apiService: LeaderboardApiService) { }
