@@ -13,6 +13,10 @@ flask-cors = "*"
 slackeventsapi = "*"
 slackclient = "==2.9.3"
 slack-sdk = "*"
+sqlalchemy = "*"
+pyodbc = "*"
+flask-mysqldb = "*"
+flask-mysql = "*"
 
 [requires]
 python_version = "3.8"
