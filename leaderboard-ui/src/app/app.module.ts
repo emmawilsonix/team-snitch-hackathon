@@ -10,6 +10,8 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { LeaderboardApiService } from './services/leaderboard-api.service';
 import { MatListModule } from '@angular/material/list';
 
 @NgModule({
@@ -25,10 +27,14 @@ import { MatListModule } from '@angular/material/list';
     AppRoutingModule,
     MatCardModule,
     MatGridListModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
     MatListModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    LeaderboardApiService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
