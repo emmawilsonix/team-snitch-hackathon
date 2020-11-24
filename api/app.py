@@ -4,7 +4,6 @@ from sqlalchemy.sql import text
 from slackeventsapi import SlackEventAdapter
 import os
 from slack_sdk import WebClient
-import logging
 
 app = Flask(__name__)
 
@@ -78,9 +77,8 @@ def handle_app_mention(event_data):
     else:
         msg = "Hey <@" + source_user["user"]["id"] + "> something funny just happened... can you try granting that point again?"
 
+    print("Sending %s the following alert: %s" %(notify_user, msg))
     slack_client.chat_postMessage(channel=notify_user, text=msg)
-    logging.info("Sending %s the following alert: %s", notify_user, msg)
-
 
 def try_grant_points(source_user_email, mentioned_user_email, points):
     """
