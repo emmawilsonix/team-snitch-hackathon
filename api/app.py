@@ -70,6 +70,8 @@ def handle_app_mention(event_data):
             if error is None:
                 msg = "Hey <@" + mentioned_user["user"]["id"] + "> you got " + str(points) + " points from <@" + source_user["user"]["id"] + ">!"
                 notify_user = mentioned_user["user"]["id"]
+                #React to the slack post now, for some sense of transparency
+                slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="thumbsup")
             # If we couldn't grant points, let people know
             else:
                 msg = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> points from you, here's what the computer told me: " + error
