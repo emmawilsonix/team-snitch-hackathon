@@ -11,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IndividualPanelComponent } from './individual-panel/individual-panel.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { IndividualPanelComponent } from './individual-panel/individual-panel.co
     AppRoutingModule,
     MatCardModule,
     MatGridListModule,
+    MatListModule,
     BrowserAnimationsModule
   ],
   providers: [],

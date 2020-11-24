@@ -10,7 +10,7 @@ export class IndividualPanelComponent implements OnInit {
   @Input() individual;
 
   @Input() placement;
-  
+
   constructor() { }
 
   ngOnInit(): void {

@@ -1,4 +1,13 @@
 <h2 class="individualLeaderboard">Individual Leaderboard</h2>
-<ul *ngFor="let individual of listOfIndividuals; index as i;">
-    <app-individual-panel [individual]="individual" [placement]="i+1"></app-individual-panel>
-    </ul>
+
+<mat-list>
+	<mat-list-item  *ngFor="let individual of listOfIndividuals; index as i;">
+        <span class="placement">{{i+1}}</span>
+		<img matListAvatar src="../../assets/images/kaylin.png">
+		<h3 matLine>{{individual.name}}</h3>
+		<p matLine>
+			<span>{{individual.team}}</span>
+		</p>
+        <span class="points">{{individual.points}}</span>
+	</mat-list-item>
+</mat-list>
