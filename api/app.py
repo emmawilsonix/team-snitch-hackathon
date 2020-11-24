@@ -25,18 +25,42 @@ app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB", "heroku_59a59d73fbb7df4")
 
 mysql = MySQL(app)
 
+# todo: Pull these from the db
+TEAM_IDS=[189651,189641,189631,189661]
+TEAM_NAME={189651: "Coffee Cat",189641: "Dancing Banana",189631: "Party Parrot",189661: "Yay Orange"}
+
+# Bind the Events API route to your existing Flask app
+SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
+slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
+
+# Create a SlackClient for your bot to use for Web API requests
+SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
+slack_client = WebClient(token=SLACK_BOT_TOKEN)
+
+SLACKBOT_USERID="U01F944MG3X"
+GENERAL_CHANNEL="C01FJ6SBZQU"
+TEST_CHANNEL="C01FF40BAPL"
+
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True)
     teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
     emailAddress = db.Column(db.String(255))
     def serialize(self):
+        image_url = "../../assets/images/unknown.png"
+        try: 
+            user_info = slack_client.users_lookupByEmail(email=emailAddress)
+            image_url = user_info["user"]["profile"]["image_72"]
+        except:
+            print("oops couldn't get an image for the user")
         return {"userID": self.userID,
                 "teamID": self.teamID,
-                "emailAddress": self.emailAddress}
+                "emailAddress": self.emailAddress,
+                "img": my_image_url}
 
 class Teams(db.Model):
     teamID = db.Column(db.Integer, primary_key=True)
     emailAddress = db.Column(db.String(255))
+
 
 class Points(db.Model):
 
@@ -46,6 +70,10 @@ class Points(db.Model):
     points = db.Column(db.Integer)
     def serialize(self):
         return {"points": self.points}
+      
+# #########################################################
+# ############# front-end api routes !!!! #################
+# #########################################################
 
 @app.route('/users', methods=['GET', 'POST'])
 def users_list():
@@ -60,7 +88,6 @@ def users_list():
                 user = Users.query.filter_by(teamID=int(request.args.get('teamID')))
                 return jsonify(user.first().serialize()) if user.first() else {}
         else:
-            
             users = Users.query.all()
             response = [user.serialize() for user in users]
             for user in response:
@@ -106,22 +133,9 @@ def testteamsgetbyid(id):
         if int(d['teamID']) == int(request.view_args['id']):
             return jsonify(d)
 
-
-# todo: Pull these from the db
-TEAM_IDS=[189651,189641,189631,189661]
-TEAM_NAME={189651: "Coffee Cat",189641: "Dancing Banana",189631: "Party Parrot",189661: "Yay Orange"}
-
-# Bind the Events API route to your existing Flask app
-SLACK_SIGNING_SECRET=os.environ.get("SLACK_SIGNING_SECRET")
-slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", app)
-
-# Create a SlackClient for your bot to use for Web API requests
-SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
-slack_client = WebClient(token=SLACK_BOT_TOKEN)
-
-SLACKBOT_USERID="U01F944MG3X"
-GENERAL_CHANNEL="C01FJ6SBZQU"
-TEST_CHANNEL="C01FF40BAPL"
+# #########################################################
+# ############ slack listener routes !!!! #################
+# #########################################################
 
 # Create an event listener for @bot mentions
 @slack_events_adapter.on("app_mention")
