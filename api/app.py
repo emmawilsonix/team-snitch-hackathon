@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from routes.users import users_routes
 from routes.home import home_routes
+from flask_cors import CORS
 from mocks import mock_user_list, mock_teams_list, mock_team_with_users
 import os
 
@@ -13,6 +14,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DBHOST", "mysql://root:l
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.register_blueprint(users_routes)
 app.register_blueprint(home_routes)
+CORS(app)
 db = SQLAlchemy(app)
 
 @app.route('/test/users', methods=['GET'])
