@@ -197,7 +197,7 @@ def handle_app_mention(event_data):
             if points > 10:
                 msg = """Hey <@{source}> :wave: I couldn't do <{permalink}|this>. 
                 
-You can give a maximum of 10 points at a time! You should try giving <@{mentioned}> some points again (but only up to 10, remember?)!""".format(mentioned=mentioned_user["user"]["id"], source=source_user["user"]["id"], permalink=original_message["permalink"])
+You can give a maximum of 10 points at a time! You should try giving <@{mentioned}> some points again (but only up to 10, remember?)!""".format(source=source_user["user"]["id"], permalink=original_message["permalink"], mentioned=mentioned_user["user"]["id"])
             else:
                 error = try_grant_points(source_user_email, mentioned_user_email, points)
                 if error is None:
