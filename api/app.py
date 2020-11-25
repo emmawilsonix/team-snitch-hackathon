@@ -193,28 +193,33 @@ def handle_app_mention(event_data):
             source_user_email = source_user["user"]["profile"]["email"]
             mentioned_user_email = mentioned_user["user"]["profile"]["email"]
             # Try to grant points
-            error = try_grant_points(source_user_email, mentioned_user_email, points)
-            if error is None:
-                original_message = slack_client.chat_getPermalink(channel=message["channel"], message_ts=message["ts"])
-                msg = """Hey <@{mentioned}> :wave: <{permalink}|you got {points} points> from <@{source}>!
-
-⚡ Check out the leaderboard <https://snitch-leaderboard.herokuapp.com/|here>! ⚡
-
-⚡ And get to snitching! ⚡""".format(mentioned=mentioned_user["user"]["id"], points=str(points), source=source_user["user"]["id"], permalink=original_message["permalink"])
-                notify_user = mentioned_user["user"]["id"]
-                #React to the slack post now, for some sense of transparency
-                try:
-                    slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="thumbsup")
-                except:
-                    print("well that's too bad I couldn't react... try again with another emoji")
-                    try:
-                        slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="white_check_mark")
-                    except: 
-                        print("something went really really wrong")
-                        pass
-            # If we couldn't grant points, let people know
+            if points > 10:
+                msg = """Hey <@{source}> :wave: I couldn't do <{permalink}|this>. 
+                
+You can give a maximum of 10 points at a time! You should try giving <@{mentioned}> some points again (but only up to 10, remember?)!"""
             else:
-                msg = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> points from you, here's what the computer told me: " + error
+                error = try_grant_points(source_user_email, mentioned_user_email, points)
+                if error is None:
+                    original_message = slack_client.chat_getPermalink(channel=message["channel"], message_ts=message["ts"])
+                    msg = """Hey <@{mentioned}> :wave: <{permalink}|you got {points} points> from <@{source}>!
+
+    ⚡ Check out the leaderboard <https://snitch-leaderboard.herokuapp.com/|here>! ⚡
+
+    ⚡ And get to snitching! ⚡""".format(mentioned=mentioned_user["user"]["id"], points=str(points), source=source_user["user"]["id"], permalink=original_message["permalink"])
+                    notify_user = mentioned_user["user"]["id"]
+                    #React to the slack post now, for some sense of transparency
+                    try:
+                        slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="thumbsup")
+                    except:
+                        print("well that's too bad I couldn't react... try again with another emoji")
+                        try:
+                            slack_client.reactions_add(channel=message["channel"], timestamp=message["event_ts"], name="white_check_mark")
+                        except: 
+                            print("something went really really wrong")
+                            pass
+                # If we couldn't grant points, let people know
+                else:
+                    msg = "Hey <@" + source_user["user"]["id"] + "> - I couldn't give <@" + mentioned_user["user"]["id"] + "> points from you, here's what the computer told me: " + error
     # If there was no user mention, handle the error.
     else:
         msg = "Hey <@" + source_user["user"]["id"] + "> something funny just happened... can you try granting that point again?"
