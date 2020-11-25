@@ -15,6 +15,7 @@ app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DBHOST", "mysql://root:lolviper@localhost/Hogwarts")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 28800 - 1
 app.register_blueprint(home_routes)
 CORS(app)
 db = SQLAlchemy(app)
