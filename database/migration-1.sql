@@ -1,0 +1,2 @@
+ALTER TABLE users
+ADD name varchar(255) DEFAULT NULL;

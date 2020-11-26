@@ -21,7 +21,7 @@ CORS(app)
 db = SQLAlchemy(app)
 app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST", "us-cdbr-east-02.cleardb.com")
 app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER", "b624ad11003645")
-app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD", "viper67") #this one is fake
+app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD", "33a2ed8c") #this one is fake
 app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB", "heroku_59a59d73fbb7df4")
 
 mysql = MySQL(app)
@@ -49,6 +49,7 @@ class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True)
     teamID = db.Column(db.Integer, db.ForeignKey('teams.teamID'))
     emailAddress = db.Column(db.String(255))
+    name = db.Column(db.String(255))
     def serialize(self):
         image_url = "../../assets/images/unknown.png"
         try: 
@@ -63,6 +64,7 @@ class Users(db.Model):
         return {"userID": self.userID,
                 "teamID": self.teamID,
                 "emailAddress": self.emailAddress,
+                "name": self.name,
                 "img": image_url}
 
 class Teams(db.Model):
@@ -260,7 +262,8 @@ def handle_user_joined_channel(event_data):
     joined=message["user"]
     joined_user = slack_client.users_info(user=joined)
     joined_user_email = joined_user["user"]["profile"]["email"]
-    team = try_add_user(joined_user_email)
+    joined_user_name = joined_user["user"]["profile"]["real_name_normalized"]
+    team = try_add_user(joined_user_email, joined_user_name)
     if team is None:
         msg = """Hey <@{joined}> :wave: I'm <@{snitch}>! Looks like you joined #general but something went wrong so I wasn't able to assign you a team. 
 
@@ -288,7 +291,7 @@ Much Love :heart: <@snitch>""".format(joined=joined, snitch=SLACKBOT_USERID, tea
     print("Sending %s the following alert: %s" %(joined, msg))
     slack_client.chat_postMessage(channel=joined, text=msg)
 
-def try_add_user(user_email):
+def try_add_user(user_email, user_name):
     """
     try_add_user tries to add a user to the db. 
         @user_email = the e-mail of the user being added
@@ -297,12 +300,12 @@ def try_add_user(user_email):
     If the user already exists return their team.
     """
 
-    query="""INSERT INTO users (teamID, emailAddress) VALUES (%s, %s)"""
+    query="""INSERT INTO users (teamID, emailAddress, name) VALUES (%s, %s, %s)"""
     print(query)
     team_assign=random.choice(TEAM_IDS)
     try:
         cur = mysql.connection.cursor()
-        cur.execute(query, (team_assign, user_email))
+        cur.execute(query, (team_assign, user_email, user_name))
         mysql.connection.commit()
         cur.close()
         return TEAM_NAME[team_assign]
