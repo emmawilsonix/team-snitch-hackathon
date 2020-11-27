@@ -39,7 +39,7 @@ SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 SLACKBOT_USERID=os.environ.get("SLACKBOT_USERID", "U01F944MG3X")
 slack_client = WebClient(token=SLACK_BOT_TOKEN)
 
-BOT_HOME_CHANNEL=SLACKBOT_USERID=os.environ.get("BOT_HOME_CHANNEL", "C01FJ6SBZQU")
+BOT_HOME_CHANNEL=os.environ.get("BOT_HOME_CHANNEL", "C01FJ6SBZQU")
 TEST_CHANNEL="C01FF40BAPL"
 
 # Locally cache profile pictures because slack seems to be rate limiting us.
