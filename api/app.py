@@ -36,10 +36,10 @@ slack_events_adapter = SlackEventAdapter(SLACK_SIGNING_SECRET, "/slack/events", 
 
 # Create a SlackClient for your bot to use for Web API requests
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
+SLACKBOT_USERID=os.environ.get("SLACKBOT_USERID", "U01F944MG3X")
 slack_client = WebClient(token=SLACK_BOT_TOKEN)
 
-SLACKBOT_USERID="U01F944MG3X"
-GENERAL_CHANNEL="C01FJ6SBZQU"
+BOT_HOME_CHANNEL=SLACKBOT_USERID=os.environ.get("BOT_HOME_CHANNEL", "C01FJ6SBZQU")
 TEST_CHANNEL="C01FF40BAPL"
 
 # Locally cache profile pictures because slack seems to be rate limiting us.
@@ -167,6 +167,7 @@ def testteamsgetbyid(id):
 @slack_events_adapter.on("app_mention")
 def handle_app_mention(event_data):
     message = event_data["event"]
+    print(message)
 
     # Get the user who initiated the @mention
     source_user = slack_client.users_info(user=message["user"])
@@ -253,7 +254,7 @@ def handle_user_joined_channel(event_data):
     message = event_data["event"]
 
     # Only create accounts when certain channels are joined.
-    if message["channel"] != TEST_CHANNEL and message["channel"] != GENERAL_CHANNEL:
+    if message["channel"] != BOT_HOME_CHANNEL:
         print("member joined a channel we don't care about...")
         return
 
