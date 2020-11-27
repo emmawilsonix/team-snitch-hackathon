@@ -56,6 +56,7 @@ class Users(db.Model):
             print("oops couldn't get an image for the user")
         return {"userID": self.userID,
                 "teamID": self.teamID,
+                "emailAddress": self.emailAddress,
                 "name": self.name,
                 "img": image_url}
 
