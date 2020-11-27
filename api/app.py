@@ -1,6 +1,7 @@
 import random
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_mysqldb import MySQL
 from sqlalchemy.sql import text
 from routes.home import home_routes
 from flask_cors import CORS
@@ -18,6 +19,12 @@ app.config['SQLALCHEMY_POOL_RECYCLE'] = 28800 - 1
 app.register_blueprint(home_routes)
 CORS(app)
 db = SQLAlchemy(app)
+app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST", "us-cdbr-east-02.cleardb.com")
+app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER", "b624ad11003645")
+app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD", "33a2ed8c") #this one is fake
+app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB", "heroku_59a59d73fbb7df4")
+
+mysql = MySQL(app)
 
 # todo: Pull these from the db
 TEAM_IDS=[189651,189641,189631,189661]
@@ -232,14 +239,14 @@ def try_grant_points(source_user_email, mentioned_user_email, points):
     function returns None if no errors occur during execution, and a string representing the error if an error does occur.
     """
     try:
-        to_user_id = Users.query.filter_by(email_address=mentioned_user_email).first().serialize()['userID']
-        from_user_id = Users.query.filter_by(email_address=source_user_email).first().serialize()['userID']
-        inserted_points = Points(userID=to_user_id, sourceUserID=from_user_id, points=points)
-        db.session.add(inserted_points)
-        db.session.commit()
+        query="""INSERT INTO points (userid, sourceUserID, points) VALUES ((SELECT userID FROM users WHERE emailAddress = %s), (SELECT userID FROM users WHERE emailAddress = %s), %s)"""
+        cur = mysql.connection.cursor()
+        cur.execute(query, (mentioned_user_email, source_user_email, points))
+        mysql.connection.commit()
+        cur.close()
         return None
-    except Exception as e:
-        return e
+    except:
+        return "Something something database?"
 
 # Create an event listener for users joining the #general channel
 @slack_events_adapter.on("member_joined_channel")
@@ -297,12 +304,13 @@ def try_add_user(user_email, user_name):
     print(query)
     team_assign=random.choice(TEAM_IDS)
     try:
-        user = Users(teamID=team_assign, emailAddress=user_email, name=user_name)
-        db.session.add(user)
-        db.session.commit()
+        cur = mysql.connection.cursor()
+        cur.execute(query, (team_assign, user_email, user_name))
+        mysql.connection.commit()
+        cur.close()
         return TEAM_NAME[team_assign]
-    except Exception as e:
-        return e
+    except:
+        return None
 
 
 if __name__ == '__main__':
